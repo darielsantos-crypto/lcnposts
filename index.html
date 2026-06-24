@@ -46,7 +46,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
     </div>
     <div class="section">
      <h3>Fotos</h3>
-     <div class="fileDrop"><label>Enviar fotos</label><input id="photos" type="file" accept="image/*,video/*,.heic,.heif,.psd,.psb,.webp,.png,.jpg,.jpeg,.mp4,.m4v,.mov,.webm,.ogv,.ogg,.avi,.mkv,.3gp" multiple></div>
+     <div class="fileDrop"><label>Enviar fotos</label><input id="photos" type="file" accept="image/*,.heic,.heif,.psd,.psb,.webp,.png,.jpg,.jpeg" multiple></div>
      <div class="row">
       <div class="field"><label>Foto selecionada</label><select id="activePhoto"></select></div>
       <div class="field"><label>Zoom</label><div class="range"><input id="zoom" type="range" min=".5" max="3" step=".01" value="1"><output id="zoomV">1.00</output></div></div>
@@ -75,7 +75,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
      </div>
     </div>
    </div>
-   <div class="actions"><button class="primary" id="download">Baixar PNG</button><button class="ghost" id="downloadVideo">Baixar vídeo (WebM)</button><button class="ghost" id="center">Centralizar foto</button></div>
+   <div class="actions"><button class="primary" id="download">Baixar PNG</button><button class="ghost" id="center">Centralizar foto</button></div>
   </aside>
   <section class="stageWrap"><div class="stage"><canvas id="canvas"></canvas></div></section>
  </main>
@@ -87,7 +87,7 @@ const CLIENTS=[{"name": "AGETO", "src": "assets/clientes/AGETO.png"}, {"name": "
 const ASSETS={frameSingle:'assets/frames/frame foto interra(1).png',frameDouble:'assets/frames/frame foto dupla(1).png',storyBg:'assets/background/fundo(5).png'};
 const $=id=>document.getElementById(id), canvas=$('canvas'),ctx=canvas.getContext('2d');
 let mode='post',W=1638,H=2048,frames={single:null,double:null,story:null};
-const st={photos:[],active:0,stateOverride:null,clientOverride:null,caption:{x:0,y:0},client:{x:0,y:0},drag:false,dragTarget:'photo',last:null,pinch:null,rendering:false};
+const st={photos:[],active:0,stateOverride:null,clientOverride:null,caption:{x:0,y:0},client:{x:0,y:0},drag:false,dragTarget:'photo',last:null,pinch:null};
 const models={
  post:[['single','1 foto'],['double','2 fotos']],
  story:[['auto','Automático'],['story1','1 foto inteira'],['story2v','2 fotos vertical'],['story2h','2 fotos horizontal'],['story3','3 fotos mista'],['story3h','3 fotos horizontal'],['story4','4 fotos grade'],['story4v','4 fotos vertical'],['story5','5 fotos mosaico'],['story6','6 fotos grade'],['story7','7 fotos mosaico'],['story8','8 fotos grade'],['story9','9 fotos grade']]
@@ -95,9 +95,7 @@ const models={
 function toast(m){const e=$('toast');e.textContent=m;e.classList.remove('hidden');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add('hidden'),2600)}
 function image(src){return new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src})}
 async function loadFrames(){frames.single=await image(ASSETS.frameSingle);frames.double=await image(ASSETS.frameDouble);frames.story=await image(ASSETS.storyBg)}
-function fileImage(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>image(r.result).then(img=>img?resolve({kind:'image',img,src:r.result,z:1,dx:0,dy:0,name:file.name}):reject());r.onerror=reject;r.readAsDataURL(file)})}
-function fileVideo(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file);const v=document.createElement('video');v.src=url;v.muted=true;v.loop=true;v.playsInline=true;v.preload='auto';v.onloadeddata=async()=>{try{await v.play();}catch(e){}resolve({kind:'video',video:v,src:url,z:1,dx:0,dy:0,name:file.name})};v.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('video'))}})}
-function fileAsset(file){return (file.type||'').startsWith('video/') || /\.(mp4|m4v|mov|webm|ogv|ogg|avi|mkv|3gp)$/i.test(file.name) ? fileVideo(file) : fileImage(file)}
+function fileImage(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>image(r.result).then(img=>img?resolve({img,src:r.result,z:1,dx:0,dy:0,name:file.name}):reject());r.onerror=reject;r.readAsDataURL(file)})}
 function setMode(m){mode=m;W=mode==='story'?1080:1638;H=mode==='story'?1920:2048;canvas.width=W;canvas.height=H;$('home').classList.add('hidden');$('app').classList.remove('hidden');$('editorTitle').textContent=mode==='story'?'Stories':'Post';$('formatPill').textContent=mode==='story'?'9:16':'4:5';document.querySelectorAll('.postOnly').forEach(e=>e.classList.toggle('hidden',mode==='story'));document.querySelectorAll('.storyOnly').forEach(e=>e.classList.toggle('hidden',mode!=='story'));$('captionToggle').classList.toggle('hidden',mode==='story');$('captionHeading').textContent=mode==='story'?'Legenda do Story':'Legenda';$('titleLabel').textContent=mode==='story'?'Texto da barra inferior':'Título';$('captionMoveLabel').textContent=mode==='story'?'Barra':'Legenda';refreshModels();draw()}
 function refreshModels(){let cur=$('model').value;$('model').innerHTML=models[mode].map(v=>`<option value="${v[0]}">${v[1]}</option>`).join('');if([...$('model').options].some(o=>o.value===cur))$('model').value=cur;else $('model').value=mode==='story'?'auto':'single';if(mode==='story')$('showCaption').checked=true;refreshActive()}
 function count(){let m=$('model').value;if(mode==='post')return m==='double'?2:1;if(m==='auto')return Math.min(9,Math.max(1,st.photos.length||1));return Number((m.match(/story(\d+)/)||[])[1]||1)}
@@ -112,7 +110,7 @@ if(n===7){let cw=(w-2*g)/3,ch=(h-2*g)/3;return[{x,y,w:cw*2+g,h:ch},{x:x+2*(cw+g)
 if(n===8){let cw=(w-g)/2,ch=(h-3*g)/4;return[0,1,2,3,4,5,6,7].map(i=>({x:x+(i%2)*(cw+g),y:y+Math.floor(i/2)*(ch+g),w:cw,h:ch}))}
 let cw=(w-2*g)/3,ch=(h-2*g)/3;return[0,1,2,3,4,5,6,7,8].map(i=>({x:x+(i%3)*(cw+g),y:y+Math.floor(i/3)*(ch+g),w:cw,h:ch}))}
 function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
-function cover(photo,r){ctx.save();rr(r.x,r.y,r.w,r.h,mode==='story'?18:0);ctx.clip();ctx.fillStyle='#1d2a43';ctx.fillRect(r.x,r.y,r.w,r.h);const media=photo?.kind==='video'?photo.video:photo?.img;if(media&&media.videoWidth+media.videoHeight>0||photo?.img){const mw=photo.kind==='video'?media.videoWidth:media.width,mh=photo.kind==='video'?media.videoHeight:media.height;let sc=Math.max(r.w/mw,r.h/mh)*(photo.z||1),dw=mw*sc,dh=mh*sc;ctx.drawImage(media,r.x+(r.w-dw)/2+(photo.dx||0),r.y+(r.h-dh)/2+(photo.dy||0),dw,dh)}else{ctx.fillStyle='rgba(255,255,255,.75)';ctx.textAlign='center';ctx.font='700 31px Arial';ctx.fillText('TOQUE PARA ENVIAR FOTO OU VÍDEO',r.x+r.w/2,r.y+r.h/2)}ctx.restore()}
+function cover(photo,r){ctx.save();rr(r.x,r.y,r.w,r.h,mode==='story'?18:0);ctx.clip();ctx.fillStyle='#1d2a43';ctx.fillRect(r.x,r.y,r.w,r.h);if(photo?.img){let sc=Math.max(r.w/photo.img.width,r.h/photo.img.height)*(photo.z||1),dw=photo.img.width*sc,dh=photo.img.height*sc;ctx.drawImage(photo.img,r.x+(r.w-dw)/2+(photo.dx||0),r.y+(r.h-dh)/2+(photo.dy||0),dw,dh)}else{ctx.fillStyle='rgba(255,255,255,.75)';ctx.textAlign='center';ctx.font='700 31px Arial';ctx.fillText('TOQUE PARA ENVIAR FOTO',r.x+r.w/2,r.y+r.h/2)}ctx.restore()}
 function wrap(txt,max,font){ctx.font=font;let a=[],line='';for(const word of String(txt||'').trim().split(/\s+/)){let t=line?line+' '+word:word;if(ctx.measureText(t).width<=max||!line)line=t;else{a.push(line);line=word}}if(line)a.push(line);return a}
 function fit(txt,maxW,maxH,weight,start,min,lh){for(let s=start;s>=min;s--){let f=`${weight} ${s}px Roboto,Arial`,lines=wrap(txt,maxW,f),lineH=s*lh;if(lines.length*lineH<=maxH)return{f,lines,lineH,s}}return{f:`${weight} ${min}px Roboto,Arial`,lines:wrap(txt,maxW,`${weight} ${min}px Roboto,Arial`),lineH:min*lh,s:min}}
 function capBox(){if(mode==='story'){let w=+$('storyW').value,h=+$('storyH').value;return{x:(W-w)/2+st.caption.x,y:H-286+st.caption.y,w,h}}return{x:126+st.caption.x,y:H-438+st.caption.y,w:+$('capW').value,h:210+(+$('capH').value)}}
@@ -124,23 +122,7 @@ async function selected(kind){let val=$(kind).value;if(kind==='state')return st.
 async function draw(){ctx.clearRect(0,0,W,H);if(mode==='story'){if(frames.story)ctx.drawImage(frames.story,0,0,W,H);else{ctx.fillStyle='#002e6a';ctx.fillRect(0,0,W,H)}}else ctx.fillStyle='#000',ctx.fillRect(0,0,W,H);let rs=rects();rs.forEach((r,i)=>cover(st.photos[i],r));if(mode==='post'){let fr=$('model').value==='double'?frames.double:frames.single;if(fr)ctx.drawImage(fr,0,0,W,H);if($('showState').checked)drawContained(await selected('state'),stateBox(),8);if($('showClient').checked)drawContained(await selected('client'),logoBox());}caption();if($('showGuides').checked){ctx.save();ctx.setLineDash([12,8]);ctx.lineWidth=3;ctx.strokeStyle='rgba(255,0,0,.95)';if(mode==='story'){ctx.strokeRect(54,62,W-108,H-372)}else{let b=capBox();ctx.strokeRect(b.x,b.y,b.w,b.h);let l=logoBox();ctx.strokeStyle='rgba(255,230,0,.95)';ctx.strokeRect(l.x,l.y,l.w,l.h)}ctx.restore()}}
 function refreshActive(){let n=count();if(st.active>=n)st.active=0;$('activePhoto').innerHTML=Array.from({length:n},(_,i)=>`<option value="${i}">Foto ${i+1}</option>`).join('');$('activePhoto').value=st.active;let p=st.photos[st.active];$('zoom').value=p?.z||1;$('zoomV').value=(p?.z||1).toFixed(2)}
 function renderAssets(){let render=(arr,grid,sel,kind)=>{$(grid).innerHTML=arr.map((a,i)=>`<button class="assetBtn ${+$ (sel).value===i?'active':''}" data-kind="${kind}" data-i="${i}" type="button"><img src="${a.src}" alt="${a.name}"><span>${a.name}</span></button>`).join('')};$('state').innerHTML=STATES.map((a,i)=>`<option value="${i}">${a.name}</option>`).join('');$('client').innerHTML=CLIENTS.map((a,i)=>`<option value="${i}">${a.name}</option>`).join('');$('state').value=Math.max(0,STATES.findIndex(a=>a.name==='PA'));$('client').value=Math.max(0,CLIENTS.findIndex(a=>a.name.toUpperCase()==='VALE'));render(STATES,'stateGrid','state','state');render(CLIENTS,'clientGrid','client','client');document.querySelectorAll('.assetBtn').forEach(b=>b.onclick=()=>{$(b.dataset.kind).value=b.dataset.i;renderAssets();draw()})}
-async function handleFiles(files){const list=[...files];const accepted=[];for(const f of list){try{accepted.push(await fileAsset(f))}catch{toast(`Não foi possível abrir ${f.name}. Use MP4, MOV, WEBM, PNG, JPG ou WEBP.`)}}if(accepted.length){st.photos.forEach(p=>{if(p?.kind==='video'&&p.src?.startsWith('blob:'))URL.revokeObjectURL(p.src)});st.photos=accepted;st.active=0;refreshActive();draw();startAnimation()}}
-function hasVideo(){return st.photos.some(p=>p?.kind==='video')}
-function startAnimation(){if(!hasVideo())return;let last=0;function loop(now){if(hasVideo()&&!st.rendering){if(now-last>28){draw();last=now}requestAnimationFrame(loop)}}requestAnimationFrame(loop)}
-async function exportVideo(){
- if(!hasVideo()){toast('Envie ao menos um vídeo para exportar em WebM.');return}
- if(!canvas.captureStream||!window.MediaRecorder){toast('Seu navegador não permite exportar vídeo.');return}
- const stream=canvas.captureStream(30);
- let mime='video/webm;codecs=vp9';
- if(!MediaRecorder.isTypeSupported(mime)) mime='video/webm';
- const recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:8000000});
- const chunks=[];recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
- recorder.onstop=()=>{const blob=new Blob(chunks,{type:mime});const a=document.createElement('a');a.download=(mode==='story'?'story':'post')+'_lucena.webm';a.href=URL.createObjectURL(blob);a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500);toast('Vídeo exportado em WebM.')};
- st.rendering=true;recorder.start();
- const start=performance.now(),duration=10000;
- function recordFrame(now){draw();if(now-start<duration)requestAnimationFrame(recordFrame);else{st.rendering=false;recorder.stop()}}
- requestAnimationFrame(recordFrame);toast('Gerando vídeo de 10 segundos...')
-}
+function handleFiles(files){let accepted=[];[...files].forEach(async f=>{try{let p=await fileImage(f);accepted.push(p);if(accepted.length===[...files].length){st.photos=accepted;st.active=0;refreshActive();draw()}}catch{toast(`Não foi possível abrir ${f.name}. HEIC e PSD dependem do suporte do navegador; use PNG, JPG, JPEG ou WEBP se necessário.`)}})}
 function point(e){let r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
 function inBox(p,b){return p.x>=b.x&&p.x<=b.x+b.w&&p.y>=b.y&&p.y<=b.y+b.h}
 function hitPhoto(p){let rs=rects();for(let i=rs.length-1;i>=0;i--){let r=rs[i];if(inBox(p,r))return i}return st.active}
@@ -175,7 +157,7 @@ document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>setMode(b.data
 ['model','showCaption','showGuides','title','body','capW','capH','storyW','storyH','state','client','showState','showClient'].forEach(id=>$(id).addEventListener('input',()=>{let o=$(id+'V');if(o)o.value=$(id).value;refreshActive();draw()}));
 $('stateUpload').onchange=async e=>{if(e.target.files[0])st.stateOverride=(await fileImage(e.target.files[0])).img,draw()};$('clientUpload').onchange=async e=>{if(e.target.files[0])st.clientOverride=(await fileImage(e.target.files[0])).img,draw()};
 document.querySelectorAll('.arrows').forEach(box=>box.querySelectorAll('.arrow:not(.blank)').forEach(btn=>btn.onclick=()=>{let target=box.dataset.move==='caption'?st.caption:st.client;target.x+=+btn.dataset.dx;target.y+=+btn.dataset.dy;draw()}));
-$('center').onclick=()=>{let q=st.photos[st.active];if(q){q.z=1;q.dx=0;q.dy=0;refreshActive();draw()}};$('download').onclick=async()=>{await draw();let a=document.createElement('a');a.download=(mode==='story'?'story':'post')+'_lucena.png';a.href=canvas.toDataURL('image/png');a.click()};$('downloadVideo').onclick=exportVideo;
+$('center').onclick=()=>{let q=st.photos[st.active];if(q){q.z=1;q.dx=0;q.dy=0;refreshActive();draw()}};$('download').onclick=async()=>{await draw();let a=document.createElement('a');a.download=(mode==='story'?'story':'post')+'_lucena.png';a.href=canvas.toDataURL('image/png');a.click()};
 (async()=>{await loadFrames();renderAssets()})();
 </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./service-worker.js').catch(()=>{})}</script></body></html>
