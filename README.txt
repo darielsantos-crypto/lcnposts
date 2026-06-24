@@ -1,16 +1,17 @@
-LUCENA EDITOR — VÍDEO ESTÁVEL
+LUCENA EDITOR — FOTO E VÍDEO SEPARADOS
 
-A aplicação exporta a composição em MP4 quando o navegador do aparelho oferecer esse encoder; caso contrário, exporta em WebM. O próprio navegador é consultado antes da exportação.
+Estrutura:
+- Post • Fotos
+- Stories • Fotos
+- Post • Vídeos
+- Stories • Vídeos
 
-MOV NÃO É UM FORMATO QUE UM PWA/NAVEGADOR CONSIGA GARANTIR NATIVAMENTE. Para MOV profissional (H.264/ProRes) é necessário um encoder nativo ou servidor, como FFmpeg/Capacitor/Electron.
+O editor de vídeo foi separado para reduzir travamentos:
+- aceita somente vídeos no modo de vídeo;
+- mantém exportação na resolução do projeto;
+- usa áudio original dos vídeos marcados;
+- tenta exportar em MP4 quando o navegador suporta; caso contrário, usa WebM;
+- para Instagram, o melhor cenário é MP4/H.264/AAC em navegadores compatíveis.
 
-Este pacote corrige o preview e a exportação para renderização síncrona, sem recarregar logos/bandeiras a cada frame. Mantém os vídeos em velocidade 1x e permite ativar/silenciar o áudio de cada vídeo. A composição é exportada na resolução fixa do projeto: Post 1638×2048 e Stories 1080×1920.
-
-Recomendação: MP4 H.264/AAC para maior compatibilidade. MOV, AVI e MKV podem ser escolhidos no upload, mas a leitura depende do codec disponível no navegador.
-
-
-CORREÇÃO DE EXPORTAÇÃO
-- O exportador agora solicita cada frame ao stream do canvas, em vez de depender apenas do ciclo visual da tela.
-- Usa WebM VP8/Opus como primeira opção por estabilidade em navegadores Chromium; MP4 fica como alternativa quando WebM não estiver disponível.
-- Antes de baixar, valida se houve dados reais. Não cria mais arquivo de 0 KB silenciosamente.
-- Para melhor resultado: Chrome recente no Android/desktop ou Safari recente no iPhone, com vídeo MP4 H.264/AAC.
+Observação técnica:
+Exportação de vídeo em navegador depende do codec que o próprio aparelho/navegador oferece ao MediaRecorder. Por isso, MP4 pode funcionar em alguns aparelhos e WebM em outros. O sistema mostra o formato disponível antes de exportar.

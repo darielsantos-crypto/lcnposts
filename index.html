@@ -9,301 +9,517 @@
 <title>Lucena Editor</title>
 <link rel="manifest" href="manifest.webmanifest">
 <style>
-:root{--blue:#002e6a;--blue2:#004b91;--red:#ff0b00;--ink:#16243a;--muted:#67748a;--line:#dbe5f0;--bg:#f4f7fb;--white:#fff;--safe:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Roboto,Arial,sans-serif}
-button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
-#home{min-height:100svh;display:grid;place-items:center;padding:24px;background:linear-gradient(145deg,#001f48,#004f9b)}
-.homeCard{width:min(100%,560px);color:#fff}.brandA{display:flex;gap:12px;align-items:center;margin-bottom:26px}.aMark{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:var(--red);font-size:31px;font-weight:900}.brandA h1{margin:0;font-size:27px}.brandA p{margin:3px 0 0;font-size:14px;opacity:.8}
-.choiceGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.choice{min-height:240px;border:1px solid rgba(255,255,255,.2);border-radius:28px;padding:24px;background:rgba(255,255,255,.08);color:#fff;text-align:left}.choice:hover{background:rgba(255,255,255,.14)}.choice .icon{font-size:46px;display:block;margin-bottom:20px}.choice h2{margin:0 0 8px;font-size:24px}.choice p{margin:0;opacity:.82;line-height:1.4}
-#app{min-height:100svh}.appHead{height:64px;padding:0 18px;display:flex;align-items:center;gap:12px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}.back{border:0;background:#eef3f9;color:var(--blue);width:38px;height:38px;border-radius:12px;font-size:20px;font-weight:900}.appHead strong{font-size:16px}.appHead .formatPill{margin-left:auto;background:#eef4fb;color:var(--blue);padding:8px 11px;border-radius:999px;font-weight:800;font-size:12px}
-.editor{display:grid;grid-template-columns:380px 1fr;gap:16px;padding:16px;align-items:start}.panel{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;position:sticky;top:80px;max-height:calc(100svh - 96px);display:flex;flex-direction:column}.panelScroll{overflow:auto;padding:14px}.section{border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:12px}.section h3{margin:0 0 11px;color:var(--blue);font-size:13px;text-transform:uppercase;letter-spacing:.04em}.field{margin-bottom:11px}.field:last-child{margin:0}label{display:block;font-size:12px;font-weight:800;color:#293a51;margin-bottom:6px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}select,textarea,input[type=text]{width:100%;border:1px solid var(--line);background:#f9fbfe;color:var(--ink);border-radius:12px;padding:11px 12px;outline:none}textarea{min-height:86px;resize:vertical}.toggle{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:800}.toggle input{width:17px;height:17px;accent-color:var(--red)}.range{display:flex;gap:9px;align-items:center}.range input{width:100%;accent-color:var(--red)}.range output{width:32px;color:var(--muted);font-size:12px;text-align:right}.fileDrop{border:1.5px dashed #b9cadc;border-radius:14px;padding:12px;background:#f8fbff}.fileDrop input{width:100%;font-size:12px}.assetList{max-height:210px;overflow:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}.assetBtn{height:60px;border:1px solid var(--line);background:#fbfdff;border-radius:10px;padding:4px;position:relative;overflow:hidden}.assetBtn.active{outline:2px solid var(--red);border-color:var(--red)}.assetBtn img{width:100%;height:100%;object-fit:contain}.assetBtn span{display:none;position:absolute;bottom:0;left:0;right:0;font-size:8px;background:rgba(255,255,255,.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.assetBtn:hover span{display:block}
-.moveGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.moveBox{border:1px solid var(--line);background:#f9fbfe;border-radius:14px;padding:10px}.moveBox h4{margin:0 0 7px;font-size:12px;color:var(--blue)}.arrows{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-width:135px;margin:auto}.arrow{height:30px;border:1px solid #c8d5e4;background:white;color:var(--blue);border-radius:8px;font-weight:900}.arrow.blank{visibility:hidden}.quick{margin-top:7px;text-align:center;font-size:10px;color:var(--muted)}.actions{padding:12px;border-top:1px solid var(--line);display:grid;gap:8px}.primary{border:0;background:var(--blue);color:#fff;padding:13px;border-radius:13px;font-weight:900}.ghost{border:0;background:#eef4fb;color:var(--blue);padding:12px;border-radius:13px;font-weight:800}
-.stageWrap{min-width:0;display:flex;justify-content:center;background:#101b2d;border-radius:22px;padding:18px;min-height:calc(100svh - 96px)}.stage{width:min(100%,760px);display:flex;justify-content:center;align-items:flex-start}canvas{display:block;max-width:100%;height:auto;background:#000;border-radius:10px;touch-action:none}
-.videoControls{display:grid;gap:10px}.audioTracks{display:grid;gap:7px}.audioTrack{display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:12px;background:#f9fbfe;font-size:12px;font-weight:800}.audioTrack input{width:17px;height:17px;accent-color:var(--red)}.videoStatus{font-size:11px;color:var(--muted);line-height:1.35}.qualityBadge{font-size:11px;color:var(--blue);font-weight:800;background:#eef4fb;border-radius:9px;padding:7px 9px}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#13243c;color:#fff;padding:11px 15px;border-radius:999px;font-size:13px;z-index:100;box-shadow:0 8px 25px rgba(0,0,0,.18)}
-@media(max-width:900px){.editor{display:block;padding:0}.panel{position:relative;top:0;border:0;border-radius:0;max-height:none;order:2}.panelScroll{padding:12px}.stageWrap{border-radius:0;padding:10px;min-height:auto}.appHead{padding-top:var(--safe);height:calc(64px + var(--safe))}.section{border-radius:15px}.choiceGrid{grid-template-columns:1fr}.choice{min-height:150px}.homeCard{padding-top:var(--safe)}.row4{grid-template-columns:repeat(4,1fr)}}
+:root{--blue:#002e6a;--blue2:#0a4d8f;--red:#ff0b00;--ink:#1f2f46;--muted:#708095;--line:#d9e2ef;--bg:#f2f6fb;--card:#fff;--safe:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+#home{min-height:100svh;background:linear-gradient(145deg,#001d45,#0a5aa4);padding:24px;display:grid;place-items:center}
+.homeCard{width:min(100%,880px);color:#fff}
+.brand{display:flex;gap:14px;align-items:center;margin-bottom:26px}
+.brand .mark{width:54px;height:54px;border-radius:18px;background:var(--red);display:grid;place-items:center;font-size:34px;font-weight:900}
+.brand h1{margin:0;font-size:29px}.brand p{margin:4px 0 0;opacity:.86}
+.homeGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.homeBtn{text-align:left;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;border-radius:24px;padding:22px;min-height:190px}
+.homeBtn:hover{background:rgba(255,255,255,.15)}.homeBtn .icon{font-size:40px;display:block;margin-bottom:14px}.homeBtn h2{margin:0 0 8px;font-size:24px}.homeBtn p{margin:0;opacity:.82;line-height:1.42}
+#app{min-height:100svh}.top{height:calc(64px + var(--safe));padding:var(--safe) 16px 0;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:30}
+.back{width:40px;height:40px;border:0;border-radius:12px;background:#eef4fb;color:var(--blue);font-size:22px;font-weight:900}
+.title{font-size:16px;font-weight:800}.pill{margin-left:auto;background:#eef4fb;color:var(--blue);padding:8px 12px;border-radius:999px;font-weight:800;font-size:12px}
+.main{display:grid;grid-template-columns:390px 1fr;gap:16px;padding:16px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;max-height:calc(100svh - 96px);position:sticky;top:80px;display:flex;flex-direction:column}
+.panelScroll{overflow:auto;padding:14px}
+.sec{border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:12px}.sec h3{margin:0 0 10px;color:var(--blue);font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+.field{margin-bottom:10px}.field:last-child{margin-bottom:0}label{display:block;font-size:12px;font-weight:800;color:#2b3d56;margin-bottom:6px}
+select,textarea,input[type=text]{width:100%;border:1px solid var(--line);background:#f9fbfe;color:var(--ink);border-radius:12px;padding:10px 12px}
+textarea{min-height:72px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.range{display:grid;grid-template-columns:1fr 52px;gap:8px;align-items:center}input[type=range]{width:100%}output{text-align:center;background:#eff5fb;border:1px solid var(--line);border-radius:10px;padding:7px 4px;font-size:12px;font-weight:800}
+.toggle{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;margin:8px 0}.toggle input{width:16px;height:16px;accent-color:var(--red)}
+.fileDrop{border:1px dashed #b8c9dc;border-radius:14px;background:#f9fbfe;padding:10px}.fileDrop label{margin-bottom:6px}.fileDrop input{width:100%}
+.assetList{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}.assetBtn{border:1px solid var(--line);background:#f9fbfe;border-radius:12px;padding:6px;position:relative;overflow:hidden}.assetBtn.active{border-color:var(--red);box-shadow:0 0 0 2px rgba(255,11,0,.12)}.assetBtn img{width:100%;height:48px;object-fit:contain;border-radius:8px;display:block}.assetBtn span{display:block;font-size:9px;font-weight:800;text-align:center;margin-top:4px;color:#33445b}
+.stageWrap{background:#121e31;border-radius:22px;padding:16px;display:flex;justify-content:center;min-height:calc(100svh - 96px)}.stage{width:min(100%,780px);display:flex;justify-content:center;align-items:flex-start}canvas{display:block;max-width:100%;height:auto;background:#000;border-radius:10px;touch-action:none}
+.moveGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.moveBox{border:1px solid var(--line);border-radius:14px;background:#f9fbfe;padding:10px}.moveBox h4{margin:0 0 6px;font-size:12px;color:var(--blue)}.arrows{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-width:138px;margin:auto}.arrow{height:30px;border:1px solid #c8d5e4;background:#fff;color:var(--blue);border-radius:8px;font-weight:900}.arrow.blank{visibility:hidden}.moveHelp{margin-top:6px;text-align:center;font-size:10px;color:var(--muted)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;border-top:1px solid var(--line);background:#fff}.actions button{height:44px;border-radius:13px;border:0;font-weight:800}.primary{background:var(--blue);color:#fff}.ghost{background:#eef4fb;color:var(--blue)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#15263d;color:#fff;padding:11px 14px;border-radius:999px;font-size:13px;z-index:80;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.videoStatus{font-size:11px;line-height:1.4;color:var(--muted)}.audioList{display:grid;gap:7px}.audioItem{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid var(--line);border-radius:12px;background:#f9fbfe;font-size:12px;font-weight:800}.audioItem input{width:16px;height:16px;accent-color:var(--red)}
+@media(max-width:980px){.main{display:block;padding:0}.panel{position:relative;top:0;border:0;border-radius:0;max-height:none}.panelScroll{padding:12px}.stageWrap{border-radius:0;padding:10px;min-height:auto}.homeGrid{grid-template-columns:1fr}.homeBtn{min-height:150px}}
 </style>
 </head>
 <body>
 <section id="home">
  <div class="homeCard">
-  <div class="brandA"><div class="aMark">A</div><div><h1>Lucena Editor</h1><p>Posts e Stories prontos para publicar.</p></div></div>
-  <div class="choiceGrid">
-   <button class="choice" data-open="post"><span class="icon">▣</span><h2>Post</h2><p>Escolha 1 ou 2 fotos, legenda, estado e cliente.</p></button>
-   <button class="choice" data-open="story"><span class="icon">▯</span><h2>Stories</h2><p>Monte layouts rápidos com até 9 fotos e legenda inferior.</p></button>
+  <div class="brand"><div class="mark">A</div><div><h1>Lucena Editor</h1><p>Escolha a ferramenta exata para foto ou vídeo.</p></div></div>
+  <div class="homeGrid">
+   <button class="homeBtn" data-kind="photo" data-mode="post"><span class="icon">▣</span><h2>Post • Fotos</h2><p>Editor leve para 1 ou 2 fotos.</p></button>
+   <button class="homeBtn" data-kind="photo" data-mode="story"><span class="icon">▯</span><h2>Stories • Fotos</h2><p>Layouts de 1 até 9 fotos.</p></button>
+   <button class="homeBtn" data-kind="video" data-mode="post"><span class="icon">▶</span><h2>Post • Vídeos</h2><p>Editor próprio para vídeo, mais estável e com áudio.</p></button>
+   <button class="homeBtn" data-kind="video" data-mode="story"><span class="icon">▭</span><h2>Stories • Vídeos</h2><p>Exportação em vídeo para stories com áudio.</p></button>
   </div>
  </div>
 </section>
+
 <section id="app" class="hidden">
- <header class="appHead"><button class="back" id="backHome">‹</button><strong id="editorTitle">Post</strong><span id="formatPill" class="formatPill"></span></header>
- <main class="editor">
+ <header class="top"><button class="back" id="backHome">‹</button><div class="title" id="editorTitle"></div><div class="pill" id="formatPill"></div></header>
+ <main class="main">
   <aside class="panel">
    <div class="panelScroll">
-    <div class="section">
-     <h3>Formato</h3>
-     <div class="field"><label>Modelo</label><select id="model"></select></div>
-     <label class="toggle" id="captionToggle"><input id="showCaption" type="checkbox" checked> Mostrar legenda</label>
-     <label class="toggle"><input id="showGuides" type="checkbox"> Mostrar guias</label>
+    <div class="sec">
+      <h3>Formato</h3>
+      <div class="field"><label>Modelo</label><select id="model"></select></div>
+      <label class="toggle" id="captionToggle"><input id="showCaption" type="checkbox" checked> Mostrar legenda</label>
+      <label class="toggle"><input id="showGuides" type="checkbox"> Mostrar guias</label>
     </div>
-    <div class="section">
-     <h3>Fotos</h3>
-     <div class="fileDrop"><label>Enviar fotos</label><input id="photos" type="file" accept="image/*,video/*,.heic,.heif,.psd,.psb,.webp,.png,.jpg,.jpeg,.mp4,.m4v,.mov,.webm,.ogv,.ogg,.avi,.mkv,.3gp" multiple></div>
-     <div class="row">
-      <div class="field"><label>Foto selecionada</label><select id="activePhoto"></select></div>
-      <div class="field"><label>Zoom</label><div class="range"><input id="zoom" type="range" min=".5" max="3" step=".01" value="1"><output id="zoomV">1.00</output></div></div>
-     </div>
-     <div class="field"><label>Espaço entre fotos</label><div class="range"><input id="gap" type="range" min="0" max="28" value="12"><output id="gapV">12</output></div></div>
+
+    <div class="sec">
+      <h3 id="uploadHeading">Mídia</h3>
+      <div class="fileDrop"><label>Enviar arquivos</label><input id="mediaInput" type="file" multiple></div>
+      <div class="row">
+        <div class="field"><label>Mídia selecionada</label><select id="activeMedia"></select></div>
+        <div class="field"><label>Zoom</label><div class="range"><input id="zoom" type="range" min="0.5" max="3" step="0.01" value="1"><output id="zoomV">1.00</output></div></div>
+      </div>
+      <div class="field"><label>Espaço entre células</label><div class="range"><input id="gap" type="range" min="0" max="28" value="12"><output id="gapV">12</output></div></div>
     </div>
-    <div class="section hidden" id="videoSection">
-     <h3>Vídeo e áudio</h3>
-     <div class="row">
-      <div class="field"><label>Frames por segundo</label><select id="fps"><option value="24">24 fps</option><option value="25">25 fps</option><option value="30" selected>30 fps</option><option value="60">60 fps</option></select></div>
-      <div class="field"><label>Duração (seg.)</label><input id="duration" type="text" value="10"></div>
-     </div>
-     <div class="qualityBadge" id="videoOutputInfo">Saída: resolução do projeto e codec do aparelho.</div>
-     <div class="audioTracks" id="audioTracks"></div>
-     <div class="videoStatus">Use os controles abaixo para ativar ou silenciar cada vídeo. A exportação mantém a velocidade 1x.</div>
+
+    <div class="sec" id="videoSec">
+      <h3>Vídeo</h3>
+      <div class="row">
+        <div class="field"><label>Frames por segundo</label><select id="fps"><option>24</option><option>25</option><option selected>30</option><option>60</option></select></div>
+        <div class="field"><label>Duração da exportação (seg.)</label><input id="duration" type="text" value="10"></div>
+      </div>
+      <div class="audioList" id="audioList"></div>
+      <div class="videoStatus" id="videoInfo"></div>
     </div>
-    <div class="section">
-     <h3 id="captionHeading">Legenda</h3>
-     <div class="field" id="titleField"><label id="titleLabel">Título</label><textarea id="title">Soluções eficientes em drenagem na mina de Serra Norte</textarea></div>
-     <div class="field postOnly" id="bodyField"><label>Texto</label><textarea id="body">Uso de extrusora na construção de canaletas. Mais produtividade, praticidade e segurança.</textarea></div>
-     <div class="row postOnly" id="postSize"><div class="field"><label>Largura da caixa</label><div class="range"><input id="capW" type="range" min="650" max="1280" value="980"><output id="capWV">980</output></div></div><div class="field"><label>Altura extra</label><div class="range"><input id="capH" type="range" min="0" max="180" value="30"><output id="capHV">30</output></div></div></div>
-     <div class="row storyOnly hidden" id="storySize"><div class="field"><label>Largura da barra</label><div class="range"><input id="storyW" type="range" min="560" max="980" value="800"><output id="storyWV">800</output></div></div><div class="field"><label>Altura da barra</label><div class="range"><input id="storyH" type="range" min="58" max="140" value="92"><output id="storyHV">92</output></div></div></div>
+
+    <div class="sec">
+      <h3 id="captionTitle">Legenda</h3>
+      <div class="field"><label id="titleLabel">Título</label><textarea id="titleText">Soluções eficientes em drenagem na mina de Serra Norte</textarea></div>
+      <div class="field postOnly" id="bodyField"><label>Texto</label><textarea id="bodyText">Uso de extrusora na construção de canaletas. Mais produtividade, praticidade e segurança.</textarea></div>
+      <div class="row postOnly">
+        <div class="field"><label>Largura da caixa</label><div class="range"><input id="postCapW" type="range" min="650" max="1280" value="980"><output id="postCapWV">980</output></div></div>
+        <div class="field"><label>Altura extra</label><div class="range"><input id="postCapH" type="range" min="0" max="180" value="30"><output id="postCapHV">30</output></div></div>
+      </div>
+      <div class="row storyOnly hidden">
+        <div class="field"><label>Largura da barra</label><div class="range"><input id="storyCapW" type="range" min="560" max="980" value="800"><output id="storyCapWV">800</output></div></div>
+        <div class="field"><label>Altura da barra</label><div class="range"><input id="storyCapH" type="range" min="58" max="130" value="92"><output id="storyCapHV">92</output></div></div>
+      </div>
     </div>
-    <div class="section postOnly" id="brandSection">
-     <h3>Estado e Cliente</h3>
-     <div class="field"><label>Estado / bandeira</label><select id="state"></select><div class="assetList" id="stateGrid"></div></div>
-     <div class="field"><label>Cliente / marca</label><select id="client"></select><div class="assetList" id="clientGrid"></div></div>
-     <div class="row"><div class="fileDrop"><label>Upload estado</label><input id="stateUpload" type="file" accept="image/*,.svg"></div><div class="fileDrop"><label>Upload cliente</label><input id="clientUpload" type="file" accept="image/*,.svg"></div></div>
-     <div class="row"><label class="toggle"><input id="showState" type="checkbox" checked> Mostrar estado</label><label class="toggle"><input id="showClient" type="checkbox" checked> Mostrar cliente</label></div>
+
+    <div class="sec postOnly" id="brandSec">
+      <h3>Estado e Cliente</h3>
+      <div class="field"><label>Estado / bandeira</label><select id="stateSelect"></select><div class="assetList" id="stateGrid"></div></div>
+      <div class="field"><label>Cliente / marca</label><select id="clientSelect"></select><div class="assetList" id="clientGrid"></div></div>
+      <div class="row">
+        <div class="fileDrop"><label>Upload estado</label><input id="stateUpload" type="file" accept="image/*,.svg"></div>
+        <div class="fileDrop"><label>Upload cliente</label><input id="clientUpload" type="file" accept="image/*,.svg"></div>
+      </div>
+      <div class="row">
+        <label class="toggle"><input id="showState" type="checkbox" checked> Mostrar estado</label>
+        <label class="toggle"><input id="showClient" type="checkbox" checked> Mostrar cliente</label>
+      </div>
     </div>
-    <div class="section">
-     <h3>Movimento</h3>
-     <div class="moveGrid">
-      <div class="moveBox"><h4 id="captionMoveLabel">Legenda</h4><div class="arrows" data-move="caption"><button class="arrow blank"></button><button class="arrow" data-dx="0" data-dy="-10">▲</button><button class="arrow blank"></button><button class="arrow" data-dx="-10" data-dy="0">◀</button><button class="arrow" data-dx="0" data-dy="10">▼</button><button class="arrow" data-dx="10" data-dy="0">▶</button></div><div class="quick">toque e arraste no canvas</div></div>
-      <div class="moveBox postOnly"><h4>Logo cliente</h4><div class="arrows" data-move="client"><button class="arrow blank"></button><button class="arrow" data-dx="0" data-dy="-10">▲</button><button class="arrow blank"></button><button class="arrow" data-dx="-10" data-dy="0">◀</button><button class="arrow" data-dx="0" data-dy="10">▼</button><button class="arrow" data-dx="10" data-dy="0">▶</button></div><div class="quick">toque e arraste no canvas</div></div>
-     </div>
+
+    <div class="sec">
+      <h3>Movimento</h3>
+      <div class="moveGrid">
+        <div class="moveBox"><h4 id="captionMoveTitle">Legenda</h4><div class="arrows" data-target="caption"><button class="arrow blank"></button><button class="arrow" data-dx="0" data-dy="-10">▲</button><button class="arrow blank"></button><button class="arrow" data-dx="-10" data-dy="0">◀</button><button class="arrow" data-dx="0" data-dy="10">▼</button><button class="arrow" data-dx="10" data-dy="0">▶</button></div><div class="moveHelp">toque e arraste no canvas</div></div>
+        <div class="moveBox postOnly"><h4>Logo cliente</h4><div class="arrows" data-target="client"><button class="arrow blank"></button><button class="arrow" data-dx="0" data-dy="-10">▲</button><button class="arrow blank"></button><button class="arrow" data-dx="-10" data-dy="0">◀</button><button class="arrow" data-dx="0" data-dy="10">▼</button><button class="arrow" data-dx="10" data-dy="0">▶</button></div><div class="moveHelp">toque e arraste no canvas</div></div>
+      </div>
     </div>
    </div>
-   <div class="actions"><button class="primary" id="download">Baixar PNG</button><button class="ghost" id="downloadVideo">Exportar vídeo</button><button class="ghost" id="center">Centralizar foto</button></div>
+   <div class="actions">
+    <button class="primary" id="exportPrimary">Baixar PNG</button>
+    <button class="ghost" id="centerBtn">Centralizar mídia</button>
+   </div>
   </aside>
   <section class="stageWrap"><div class="stage"><canvas id="canvas"></canvas></div></section>
  </main>
 </section>
+
 <div id="toast" class="toast hidden"></div>
+
 <script>
-const STATES=[{"name": "AL", "src": "assets/estados/AL.png"}, {"name": "AM", "src": "assets/estados/AM.png"}, {"name": "BA", "src": "assets/estados/BA.png"}, {"name": "GO", "src": "assets/estados/GO.png"}, {"name": "MA", "src": "assets/estados/MA.png"}, {"name": "MT", "src": "assets/estados/MT.png"}, {"name": "PA", "src": "assets/estados/PA.png"}, {"name": "PI", "src": "assets/estados/PI.png"}, {"name": "TO", "src": "assets/estados/TO.png"}];
-const CLIENTS=[{"name": "AGETO", "src": "assets/clientes/AGETO.png"}, {"name": "ALUMAR", "src": "assets/clientes/ALUMAR.png"}, {"name": "ANGLO AMERICAN", "src": "assets/clientes/ANGLO AMERICAN.png"}, {"name": "BAMIN", "src": "assets/clientes/BAMIN.png"}, {"name": "CIMENTO BRAVO", "src": "assets/clientes/CIMENTO BRAVO.png"}, {"name": "CODEVASF", "src": "assets/clientes/CODEVASF.png"}, {"name": "DNIT", "src": "assets/clientes/DNIT.png"}, {"name": "EBX", "src": "assets/clientes/EBX.png"}, {"name": "ENEVA", "src": "assets/clientes/ENEVA.png"}, {"name": "GOINFRA", "src": "assets/clientes/GOINFRA.png"}, {"name": "GOVERNO DA BAHIA", "src": "assets/clientes/GOVERNO DA BAHIA.png"}, {"name": "GOVERNO DO GOIÁS", "src": "assets/clientes/GOVERNO DO GOIÁS.png"}, {"name": "GOVERNO DO MARANHÃO", "src": "assets/clientes/GOVERNO DO MARANHÃO.png"}, {"name": "GOVERNO DO MATO GROSSO", "src": "assets/clientes/GOVERNO DO MATO GROSSO.png"}, {"name": "GOVERNO DO PARÁ", "src": "assets/clientes/GOVERNO DO PARÁ.png"}, {"name": "GOVERNO DO TOCANTINS", "src": "assets/clientes/GOVERNO DO TOCANTINS.png"}, {"name": "INFRAERO", "src": "assets/clientes/INFRAERO.png"}, {"name": "PORTO DO ITAQUI", "src": "assets/clientes/PORTO DO ITAQUI.png"}, {"name": "PORTO SÃO LUÍS", "src": "assets/clientes/PORTO SÃO LUÍS.png"}, {"name": "PREFEITURA DE ANÁPOLIS", "src": "assets/clientes/PREFEITURA DE ANÁPOLIS.png"}, {"name": "PREFEITURA DE ARAGUAÍNA", "src": "assets/clientes/PREFEITURA DE ARAGUAÍNA.png"}, {"name": "PREFEITURA DE ARAPIRACA", "src": "assets/clientes/PREFEITURA DE ARAPIRACA.png"}, {"name": "PREFEITURA DE BARCARENA", "src": "assets/clientes/PREFEITURA DE BARCARENA.png"}, {"name": "PREFEITURA DE BELEM", "src": "assets/clientes/PREFEITURA DE BELEM.png"}, {"name": "PREFEITURA DE GOIâNIA", "src": "assets/clientes/PREFEITURA DE GOIâNIA.png"}, {"name": "PREFEITURA DE PALMAS", "src": "assets/clientes/PREFEITURA DE PALMAS.png"}, {"name": "PREFEITURA DE PARAGOMINAS", "src": "assets/clientes/PREFEITURA DE PARAGOMINAS.png"}, {"name": "PREFEITURA DE PIRIPIRI", "src": "assets/clientes/PREFEITURA DE PIRIPIRI.png"}, {"name": "PREFEITURA DE SÃO JOSÉ DE RIBAMAR", "src": "assets/clientes/PREFEITURA DE SÃO JOSÉ DE RIBAMAR.png"}, {"name": "PREFEITURA DE SÃO LUÍS", "src": "assets/clientes/PREFEITURA DE SÃO LUÍS.png"}, {"name": "SUZANO", "src": "assets/clientes/SUZANO.png"}, {"name": "VALE", "src": "assets/clientes/VALE.png"}, {"name": "VLI", "src": "assets/clientes/VLI.png"}, {"name": "logo-nova-rota-white", "src": "assets/clientes/logo-nova-rota-white.png"}, {"name": "ugpe", "src": "assets/clientes/ugpe.png"}];
-const ASSETS={frameSingle:'assets/frames/frame foto interra(1).png',frameDouble:'assets/frames/frame foto dupla(1).png',storyBg:'assets/background/fundo(5).png'};
-const $=id=>document.getElementById(id), canvas=$('canvas'),ctx=canvas.getContext('2d');
-let mode='post',W=1638,H=2048,frames={single:null,double:null,story:null};
-const st={photos:[],active:0,stateOverride:null,clientOverride:null,stateImg:null,clientImg:null,caption:{x:0,y:0},client:{x:0,y:0},drag:false,dragTarget:'photo',last:null,pinch:null,rendering:false,audioCtx:null,audioDest:null};
-const models={
- post:[['single','1 foto'],['double','2 fotos']],
- story:[['auto','Automático'],['story1','1 foto inteira'],['story2v','2 fotos vertical'],['story2h','2 fotos horizontal'],['story3','3 fotos mista'],['story3h','3 fotos horizontal'],['story4','4 fotos grade'],['story4v','4 fotos vertical'],['story5','5 fotos mosaico'],['story6','6 fotos grade'],['story7','7 fotos mosaico'],['story8','8 fotos grade'],['story9','9 fotos grade']]
+const STATES = [{"name": "AL", "src": "assets/estados/AL.png"}, {"name": "AM", "src": "assets/estados/AM.png"}, {"name": "BA", "src": "assets/estados/BA.png"}, {"name": "GO", "src": "assets/estados/GO.png"}, {"name": "MA", "src": "assets/estados/MA.png"}, {"name": "MT", "src": "assets/estados/MT.png"}, {"name": "PA", "src": "assets/estados/PA.png"}, {"name": "PI", "src": "assets/estados/PI.png"}, {"name": "TO", "src": "assets/estados/TO.png"}];
+const CLIENTS = [{"name": "AGETO", "src": "assets/clientes/AGETO.png"}, {"name": "ALUMAR", "src": "assets/clientes/ALUMAR.png"}, {"name": "ANGLO AMERICAN", "src": "assets/clientes/ANGLO AMERICAN.png"}, {"name": "BAMIN", "src": "assets/clientes/BAMIN.png"}, {"name": "CIMENTO BRAVO", "src": "assets/clientes/CIMENTO BRAVO.png"}, {"name": "CODEVASF", "src": "assets/clientes/CODEVASF.png"}, {"name": "DNIT", "src": "assets/clientes/DNIT.png"}, {"name": "EBX", "src": "assets/clientes/EBX.png"}, {"name": "ENEVA", "src": "assets/clientes/ENEVA.png"}, {"name": "GOINFRA", "src": "assets/clientes/GOINFRA.png"}, {"name": "GOVERNO DA BAHIA", "src": "assets/clientes/GOVERNO DA BAHIA.png"}, {"name": "GOVERNO DO GOIÁS", "src": "assets/clientes/GOVERNO DO GOIÁS.png"}, {"name": "GOVERNO DO MARANHÃO", "src": "assets/clientes/GOVERNO DO MARANHÃO.png"}, {"name": "GOVERNO DO MATO GROSSO", "src": "assets/clientes/GOVERNO DO MATO GROSSO.png"}, {"name": "GOVERNO DO PARÁ", "src": "assets/clientes/GOVERNO DO PARÁ.png"}, {"name": "GOVERNO DO TOCANTINS", "src": "assets/clientes/GOVERNO DO TOCANTINS.png"}, {"name": "INFRAERO", "src": "assets/clientes/INFRAERO.png"}, {"name": "PORTO DO ITAQUI", "src": "assets/clientes/PORTO DO ITAQUI.png"}, {"name": "PORTO SÃO LUÍS", "src": "assets/clientes/PORTO SÃO LUÍS.png"}, {"name": "PREFEITURA DE ANÁPOLIS", "src": "assets/clientes/PREFEITURA DE ANÁPOLIS.png"}, {"name": "PREFEITURA DE ARAGUAÍNA", "src": "assets/clientes/PREFEITURA DE ARAGUAÍNA.png"}, {"name": "PREFEITURA DE ARAPIRACA", "src": "assets/clientes/PREFEITURA DE ARAPIRACA.png"}, {"name": "PREFEITURA DE BARCARENA", "src": "assets/clientes/PREFEITURA DE BARCARENA.png"}, {"name": "PREFEITURA DE BELEM", "src": "assets/clientes/PREFEITURA DE BELEM.png"}, {"name": "PREFEITURA DE GOIâNIA", "src": "assets/clientes/PREFEITURA DE GOIâNIA.png"}, {"name": "PREFEITURA DE PALMAS", "src": "assets/clientes/PREFEITURA DE PALMAS.png"}, {"name": "PREFEITURA DE PARAGOMINAS", "src": "assets/clientes/PREFEITURA DE PARAGOMINAS.png"}, {"name": "PREFEITURA DE PIRIPIRI", "src": "assets/clientes/PREFEITURA DE PIRIPIRI.png"}, {"name": "PREFEITURA DE SÃO JOSÉ DE RIBAMAR", "src": "assets/clientes/PREFEITURA DE SÃO JOSÉ DE RIBAMAR.png"}, {"name": "PREFEITURA DE SÃO LUÍS", "src": "assets/clientes/PREFEITURA DE SÃO LUÍS.png"}, {"name": "SUZANO", "src": "assets/clientes/SUZANO.png"}, {"name": "VALE", "src": "assets/clientes/VALE.png"}, {"name": "VLI", "src": "assets/clientes/VLI.png"}, {"name": "logo-nova-rota-white", "src": "assets/clientes/logo-nova-rota-white.png"}, {"name": "ugpe", "src": "assets/clientes/ugpe.png"}];
+const ASSETS = {
+  frameSingle: 'assets/frames/frame foto interra(1).png',
+  frameDouble: 'assets/frames/frame foto dupla(1).png',
+  storyBg: 'assets/background/fundo(5).png'
 };
-function toast(m){const e=$('toast');e.textContent=m;e.classList.remove('hidden');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add('hidden'),2600)}
-function image(src){return new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src})}
-async function loadFrames(){frames.single=await image(ASSETS.frameSingle);frames.double=await image(ASSETS.frameDouble);frames.story=await image(ASSETS.storyBg)}
-function fileImage(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>image(r.result).then(img=>img?resolve({kind:'image',img,src:r.result,z:1,dx:0,dy:0,name:file.name}):reject());r.onerror=reject;r.readAsDataURL(file)})}
-function waitMeta(v){return new Promise((resolve,reject)=>{if(v.readyState>=1)return resolve();v.onloadedmetadata=()=>resolve();v.onerror=()=>reject(new Error('video'))})}
-function setupVideoAudio(item){
-  if(!window.AudioContext && !window.webkitAudioContext) return;
-  const AC=window.AudioContext||window.webkitAudioContext;
-  if(!st.audioCtx){st.audioCtx=new AC();st.audioDest=st.audioCtx.createMediaStreamDestination()}
-  const source=st.audioCtx.createMediaElementSource(item.video),gain=st.audioCtx.createGain();
-  gain.gain.value=item.audioEnabled?1:0;
-  source.connect(gain);gain.connect(st.audioCtx.destination);gain.connect(st.audioDest);
-  item.gain=gain;
+const $ = id => document.getElementById(id);
+const canvas = $('canvas'), ctx = canvas.getContext('2d');
+let editorKind='photo', mode='post', W=1638, H=2048;
+const cache = {frameSingle:null, frameDouble:null, storyBg:null, stateImg:null, clientImg:null};
+const state = {
+  items:[], active:0,
+  captionOffset:{x:0,y:0},
+  clientOffset:{x:0,y:0},
+  stateOverride:null, clientOverride:null,
+  drag:false, dragTarget:'media', last:null,
+  renderLoop:false, audioCtx:null, audioDest:null
+};
+const modelSets = {
+  photo_post: [['single','1 foto'],['double','2 fotos']],
+  photo_story: [['auto','Automático'],['story1','1 foto inteira'],['story2v','2 fotos vertical'],['story2h','2 fotos horizontal'],['story3','3 fotos mista'],['story3h','3 fotos horizontal'],['story4','4 fotos grade'],['story4v','4 fotos vertical'],['story5','5 fotos mosaico'],['story6','6 fotos grade'],['story7','7 fotos mosaico'],['story8','8 fotos grade'],['story9','9 fotos grade']],
+  video_post: [['single','1 vídeo'],['double','2 vídeos']],
+  video_story: [['story1','1 vídeo inteiro'],['story2v','2 vídeos vertical'],['story2h','2 vídeos horizontal']]
+};
+
+function toast(msg) {
+  const e = $('toast'); e.textContent = msg; e.classList.remove('hidden');
+  clearTimeout(toast.t); toast.t = setTimeout(()=>e.classList.add('hidden'), 2600);
 }
-async function fileVideo(file){
-  const url=URL.createObjectURL(file),v=document.createElement('video');
-  v.src=url;v.muted=true;v.loop=true;v.playsInline=true;v.preload='auto';v.crossOrigin='anonymous';
-  await waitMeta(v);
-  const item={kind:'video',video:v,src:url,z:1,dx:0,dy:0,name:file.name,audioEnabled:true,duration:Number.isFinite(v.duration)?v.duration:10};
-  try{setupVideoAudio(item);await v.play()}catch(e){}
+function showHide(sel, hide) { document.querySelectorAll(sel).forEach(el=>el.classList.toggle('hidden', hide)); }
+function image(src) { return new Promise(r=>{ const i=new Image(); i.onload=()=>r(i); i.onerror=()=>r(null); i.src=src; }) }
+async function loadFixedAssets() {
+  cache.frameSingle = await image(ASSETS.frameSingle);
+  cache.frameDouble = await image(ASSETS.frameDouble);
+  cache.storyBg = await image(ASSETS.storyBg);
+}
+function currentModelSet() { return modelSets[editorKind+'_'+mode]; }
+function mediaAccept() {
+  return editorKind==='video'
+    ? 'video/*,.mp4,.mov,.m4v,.webm,.ogv,.ogg,.avi,.mkv,.3gp'
+    : 'image/*,.png,.jpg,.jpeg,.webp,.gif,.svg,.heic,.heif';
+}
+function setEditor(kind, md) {
+  editorKind=kind; mode=md;
+  W = mode==='story' ? 1080 : 1638;
+  H = mode==='story' ? 1920 : 2048;
+  canvas.width=W; canvas.height=H;
+  $('home').classList.add('hidden'); $('app').classList.remove('hidden');
+  $('editorTitle').textContent = (mode==='post'?'Post':'Stories') + ' • ' + (editorKind==='photo'?'Fotos':'Vídeos');
+  $('formatPill').textContent = mode==='story' ? '9:16' : '4:5';
+  $('uploadHeading').textContent = editorKind==='photo' ? 'Fotos' : 'Vídeos';
+  $('mediaInput').accept = mediaAccept();
+  $('exportPrimary').textContent = editorKind==='photo' ? 'Baixar PNG' : 'Exportar vídeo';
+  $('videoSec').classList.toggle('hidden', editorKind!=='video');
+  $('captionToggle').classList.toggle('hidden', mode==='story');
+  showHide('.postOnly', mode==='story');
+  showHide('.storyOnly', mode!=='story');
+  $('captionTitle').textContent = mode==='story' ? 'Legenda do Story' : 'Legenda';
+  $('titleLabel').textContent = mode==='story' ? 'Texto da barra inferior' : 'Título';
+  $('captionMoveTitle').textContent = mode==='story' ? 'Barra' : 'Legenda';
+  $('bodyField').classList.toggle('hidden', mode==='story');
+  $('showCaption').checked = mode==='story' ? true : $('showCaption').checked;
+  state.items=[]; state.active=0; state.captionOffset={x:0,y:0}; state.clientOffset={x:0,y:0};
+  refreshModels();
+  renderAssetPickers();
+  preloadBrands();
+  updateVideoInfo();
+  draw();
+}
+function refreshModels() {
+  const current = $('model').value;
+  const set = currentModelSet();
+  $('model').innerHTML = set.map(([v,t])=>`<option value="${v}">${t}</option>`).join('');
+  $('model').value = set.some(([v])=>v===current) ? current : set[0][0];
+  refreshActiveMedia();
+}
+function itemCount() {
+  const m = $('model').value;
+  if (editorKind==='photo' && mode==='story') {
+    if (m==='auto') return Math.max(1, Math.min(9, state.items.length || 1));
+    const hit = m.match(/story(\d+)/); return hit ? Number(hit[1]) : 1;
+  }
+  if (editorKind==='video' && mode==='story') {
+    if (m==='story2v' || m==='story2h') return 2;
+    return 1;
+  }
+  if (mode==='post') return $('model').value==='double' ? 2 : 1;
+  return 1;
+}
+function rects() {
+  const n = itemCount(), g = Number($('gap').value);
+  const x = mode==='story' ? 54 : 0, y = mode==='story' ? 62 : 0, w = mode==='story' ? W-108 : W, h = mode==='story' ? H-y-310 : H;
+  if (mode==='post') return n===1 ? [{x,y,w,h}] : [{x,y,w,h:h/2},{x,y:y+h/2,w,h:h/2}];
+  if (n===1) return [{x,y,w,h}];
+  if ($('model').value==='story2v') return [{x,y,w:(w-g)/2,h},{x:x+(w+g)/2,y,w:(w-g)/2,h}];
+  if ($('model').value==='story2h') return [{x,y,w,h:(h-g)/2},{x,y:y+(h+g)/2,w,h:(h-g)/2}];
+  if ($('model').value==='story3h') { let ch=(h-2*g)/3; return [0,1,2].map(i=>({x,y:y+i*(ch+g),w,h:ch})); }
+  if (n===3) return [{x,y,w,h:(h-g)*.46},{x,y:y+(h+g)*.46,w:(w-g)/2,h:h-(h+g)*.46},{x:x+(w+g)/2,y:y+(h+g)*.46,w:(w-g)/2,h:h-(h+g)*.46}];
+  if ($('model').value==='story4v') { let cw=(w-3*g)/4; return [0,1,2,3].map(i=>({x:x+i*(cw+g),y,w:cw,h})); }
+  if (n===4) { let cw=(w-g)/2, ch=(h-g)/2; return [0,1,2,3].map(i=>({x:x+(i%2)*(cw+g),y:y+Math.floor(i/2)*(ch+g),w:cw,h:ch})); }
+  if (n===5) { let cw=(w-g)/2,ch=(h-2*g)/3; return [{x,y,w:cw,h:ch*2+g},{x:x+cw+g,y,w:cw,h:ch},{x:x+cw+g,y:y+ch+g,w:cw,h:ch},{x,y:y+ch*2+2*g,w:cw,h:ch},{x:x+cw+g,y:y+ch*2+2*g,w:cw,h:ch}]; }
+  if (n===6) { let cw=(w-g)/2,ch=(h-2*g)/3; return [0,1,2,3,4,5].map(i=>({x:x+(i%2)*(cw+g),y:y+Math.floor(i/2)*(ch+g),w:cw,h:ch})); }
+  if (n===7) { let cw=(w-2*g)/3,ch=(h-2*g)/3; return [{x,y,w:cw*2+g,h:ch},{x:x+2*(cw+g),y,w:cw,h:ch},{x,y:y+ch+g,w:cw,h:ch},{x:x+cw+g,y:y+ch+g,w:cw,h:ch},{x:x+2*(cw+g),y:y+ch+g,w:cw,h:ch},{x,y:y+2*(ch+g),w:(w-g)/2,h:ch},{x:x+(w+g)/2,y:y+2*(ch+g),w:(w-g)/2,h:ch}]; }
+  if (n===8) { let cw=(w-g)/2,ch=(h-3*g)/4; return [0,1,2,3,4,5,6,7].map(i=>({x:x+(i%2)*(cw+g),y:y+Math.floor(i/2)*(ch+g),w:cw,h:ch})); }
+  let cw=(w-2*g)/3,ch=(h-2*g)/3; return [0,1,2,3,4,5,6,7,8].map(i=>({x:x+(i%3)*(cw+g),y:y+Math.floor(i/3)*(ch+g),w:cw,h:ch}));
+}
+function rr(x,y,w,h,r) {
+  ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+}
+function drawContained(img, b, round=0) {
+  if (!img || !b.w || !b.h) return;
+  ctx.save(); if (round) { rr(b.x,b.y,b.w,b.h,round); ctx.clip(); }
+  const pad=Math.min(b.w,b.h)*.06, sc=Math.min((b.w-pad*2)/img.width,(b.h-pad*2)/img.height), dw=img.width*sc, dh=img.height*sc;
+  ctx.drawImage(img, b.x+(b.w-dw)/2, b.y+(b.h-dh)/2, dw, dh); ctx.restore();
+}
+function drawCell(item, r) {
+  ctx.save(); rr(r.x,r.y,r.w,r.h, mode==='story' ? 18 : 0); ctx.clip();
+  ctx.fillStyle='#1d2a43'; ctx.fillRect(r.x,r.y,r.w,r.h);
+  const media = item?.kind==='video' ? item.video : item?.img;
+  const mw = item?.kind==='video' ? media?.videoWidth : media?.width;
+  const mh = item?.kind==='video' ? media?.videoHeight : media?.height;
+  if (media && mw && mh) {
+    const sc = Math.max(r.w/mw, r.h/mh) * (item.z || 1), dw=mw*sc, dh=mh*sc;
+    ctx.drawImage(media, r.x+(r.w-dw)/2+(item.dx||0), r.y+(r.h-dh)/2+(item.dy||0), dw, dh);
+  } else {
+    ctx.fillStyle='rgba(255,255,255,.75)'; ctx.textAlign='center'; ctx.font='700 31px Arial'; ctx.fillText(editorKind==='photo'?'TOQUE PARA ENVIAR FOTO':'TOQUE PARA ENVIAR VÍDEO', r.x+r.w/2, r.y+r.h/2);
+  }
+  ctx.restore();
+}
+function wrap(text, max, font) {
+  ctx.font = font; const words = String(text||'').trim().split(/\s+/).filter(Boolean); let lines=[], line='';
+  for (const word of words) { const test = line ? line+' '+word : word; if (ctx.measureText(test).width <= max || !line) line=test; else { lines.push(line); line=word; } }
+  if (line) lines.push(line); return lines.length ? lines : [''];
+}
+function fitText(text, maxW, maxH, weight, start, min, mult) {
+  for (let s=start; s>=min; s--) {
+    const font = `${weight} ${s}px Arial`, lines = wrap(text, maxW, font), lineH = s*mult;
+    if (lines.length*lineH <= maxH) return {font, lines, lineH};
+  }
+  const font = `${weight} ${min}px Arial`; return {font, lines: wrap(text,maxW,font), lineH:min*mult};
+}
+function captionBox() {
+  if (mode==='story') {
+    const w=Number($('storyCapW').value), h=Number($('storyCapH').value);
+    return {x:(W-w)/2 + state.captionOffset.x, y:H-286 + state.captionOffset.y, w, h};
+  }
+  return {x:126 + state.captionOffset.x, y:H-438 + state.captionOffset.y, w:Number($('postCapW').value), h:210+Number($('postCapH').value)};
+}
+function logoBox() { return mode==='story' ? {x:0,y:0,w:0,h:0} : {x:W-365 + state.clientOffset.x, y:H-318 + state.clientOffset.y, w:245, h:145}; }
+function stateBox() { return mode==='story' ? {x:0,y:0,w:0,h:0} : {x:W-250, y:128, w:126, h:82}; }
+function drawCaption() {
+  if (!$('showCaption').checked) return;
+  const b=captionBox();
+  ctx.save(); ctx.strokeStyle='#fff'; ctx.lineWidth = mode==='story' ? 2.2 : 4;
+  if (mode==='story') {
+    rr(b.x,b.y,b.w,b.h,b.h/2); ctx.stroke();
+    const fit=fitText($('titleText').value, b.w-70, b.h-18, '500', 31, 18, 1.12);
+    ctx.font = fit.font; ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    let cy = b.y + b.h/2 - fit.lines.length*fit.lineH/2 + fit.lineH/2;
+    fit.lines.forEach(line=>{ ctx.fillText(line, b.x+b.w/2, cy); cy += fit.lineH; });
+  } else {
+    rr(b.x,b.y,b.w,b.h,18); ctx.stroke();
+    const pad=30;
+    const title=fitText($('titleText').value, b.w-pad*2, 110, '900', 38, 20, 1.05);
+    ctx.textBaseline='top'; let ty=b.y+28; const titleGap=22;
+    ctx.font=title.font;
+    title.lines.forEach(line=>{
+      const tw = ctx.measureText(line).width;
+      ctx.fillStyle='#ff0b00'; ctx.fillRect(b.x+pad, ty-6, Math.min(b.w-pad*2, tw+28), title.lineH+14);
+      ctx.fillStyle='#fff'; ctx.fillText(line, b.x+pad+14, ty); ty += title.lineH + titleGap;
+    });
+    const body=fitText($('bodyText').value, b.w-pad*2, b.h-(ty-b.y)-30, '900', 34, 22, 1.1);
+    ctx.font=body.font; ctx.fillStyle='#fff';
+    body.lines.slice(0,5).forEach(line=>{ ctx.fillText(line, b.x+pad, ty); ty += body.lineH; });
+  }
+  ctx.restore();
+}
+function drawGuides() {
+  if (!$('showGuides').checked) return;
+  ctx.save(); ctx.setLineDash([12,8]); ctx.lineWidth=3;
+  const cb=captionBox(); ctx.strokeStyle='rgba(0,181,226,.95)'; ctx.strokeRect(cb.x,cb.y,cb.w,cb.h);
+  if (mode==='post') {
+    const lb=logoBox(), sb=stateBox();
+    ctx.strokeStyle='rgba(255,234,0,.95)'; ctx.strokeRect(lb.x,lb.y,lb.w,lb.h);
+    ctx.strokeStyle='rgba(255,234,0,.6)'; ctx.strokeRect(sb.x,sb.y,sb.w,sb.h);
+  }
+  ctx.restore();
+}
+function draw() {
+  ctx.clearRect(0,0,W,H);
+  if (mode==='story') {
+    if (cache.storyBg) ctx.drawImage(cache.storyBg,0,0,W,H); else { ctx.fillStyle='#002e6a'; ctx.fillRect(0,0,W,H); }
+  } else {
+    ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
+  }
+  rects().forEach((r,i)=>drawCell(state.items[i], r));
+  if (mode==='post') {
+    const frame = $('model').value==='double' ? cache.frameDouble : cache.frameSingle;
+    if (frame) ctx.drawImage(frame,0,0,W,H);
+    if ($('showState').checked) drawContained(cache.stateImg, stateBox(), 8);
+    if ($('showClient').checked) drawContained(cache.clientImg, logoBox(), 0);
+  }
+  drawCaption(); drawGuides();
+}
+function refreshActiveMedia() {
+  const n=itemCount(); if (state.active>=n) state.active=0;
+  $('activeMedia').innerHTML = Array.from({length:n}, (_,i)=>`<option value="${i}">${editorKind==='photo'?'Foto':'Vídeo'} ${i+1}</option>`).join('');
+  $('activeMedia').value = String(state.active);
+  const item = state.items[state.active]; $('zoom').value = item?.z || 1; $('zoomV').value = Number(item?.z || 1).toFixed(2);
+}
+function renderAssetPickers() {
+  $('stateSelect').innerHTML = STATES.map((a,i)=>`<option value="${i}">${a.name}</option>`).join('');
+  $('clientSelect').innerHTML = CLIENTS.map((a,i)=>`<option value="${i}">${a.name}</option>`).join('');
+  if (!$('stateSelect').dataset.ready) { $('stateSelect').value = Math.max(0, STATES.findIndex(a=>a.name==='PA')); $('stateSelect').dataset.ready='1'; }
+  if (!$('clientSelect').dataset.ready) { $('clientSelect').value = Math.max(0, CLIENTS.findIndex(a=>a.name.toUpperCase()==='VALE')); $('clientSelect').dataset.ready='1'; }
+  $('stateGrid').innerHTML = STATES.map((a,i)=>`<button class="assetBtn ${Number($('stateSelect').value)===i?'active':''}" type="button" data-kind="state" data-i="${i}"><img src="${a.src}" alt="${a.name}"><span>${a.name}</span></button>`).join('');
+  $('clientGrid').innerHTML = CLIENTS.map((a,i)=>`<button class="assetBtn ${Number($('clientSelect').value)===i?'active':''}" type="button" data-kind="client" data-i="${i}"><img src="${a.src}" alt="${a.name}"><span>${a.name}</span></button>`).join('');
+  document.querySelectorAll('.assetBtn').forEach(btn=>btn.onclick=()=>{ if(btn.dataset.kind==='state') $('stateSelect').value=btn.dataset.i; else $('clientSelect').value=btn.dataset.i; renderAssetPickers(); preloadBrands(); });
+}
+async function preloadBrands() {
+  if (mode==='story') { cache.stateImg=null; cache.clientImg=null; draw(); return; }
+  cache.stateImg = state.stateOverride || await image(STATES[Number($('stateSelect').value)]?.src);
+  cache.clientImg = state.clientOverride || await image(CLIENTS[Number($('clientSelect').value)]?.src);
+  draw();
+}
+async function loadImageFile(file) {
+  return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>image(r.result).then(img=>img?resolve({kind:'image',img,src:r.result,z:1,dx:0,dy:0,name:file.name}):reject()); r.onerror=reject; r.readAsDataURL(file); });
+}
+async function loadVideoFile(file) {
+  const url = URL.createObjectURL(file);
+  const video = document.createElement('video');
+  video.src = url; video.muted = true; video.loop = true; video.playsInline = true; video.preload = 'auto'; video.crossOrigin='anonymous';
+  await new Promise((resolve,reject)=>{ video.onloadedmetadata=()=>resolve(); video.onerror=()=>reject(); });
+  try { await video.play(); } catch(e) {}
+  const item = {kind:'video', video, src:url, z:1, dx:0, dy:0, name:file.name, duration: Number.isFinite(video.duration)?video.duration:10, audioEnabled:true, sourceNode:null, gainNode:null};
+  ensureAudioNodes(item);
   return item;
 }
-function fileAsset(file){return (file.type||'').startsWith('video/') || /\.(mp4|m4v|mov|webm|ogv|ogg|avi|mkv|3gp)$/i.test(file.name) ? fileVideo(file) : fileImage(file)}
-function setMode(m){mode=m;W=mode==='story'?1080:1638;H=mode==='story'?1920:2048;canvas.width=W;canvas.height=H;$('home').classList.add('hidden');$('app').classList.remove('hidden');$('editorTitle').textContent=mode==='story'?'Stories':'Post';$('formatPill').textContent=mode==='story'?'9:16':'4:5';document.querySelectorAll('.postOnly').forEach(e=>e.classList.toggle('hidden',mode==='story'));document.querySelectorAll('.storyOnly').forEach(e=>e.classList.toggle('hidden',mode!=='story'));$('captionToggle').classList.toggle('hidden',mode==='story');$('captionHeading').textContent=mode==='story'?'Legenda do Story':'Legenda';$('titleLabel').textContent=mode==='story'?'Texto da barra inferior':'Título';$('captionMoveLabel').textContent=mode==='story'?'Barra':'Legenda';refreshModels();updateVideoOutputInfo();draw()}
-function refreshModels(){let cur=$('model').value;$('model').innerHTML=models[mode].map(v=>`<option value="${v[0]}">${v[1]}</option>`).join('');if([...$('model').options].some(o=>o.value===cur))$('model').value=cur;else $('model').value=mode==='story'?'auto':'single';if(mode==='story')$('showCaption').checked=true;refreshActive()}
-function count(){let m=$('model').value;if(mode==='post')return m==='double'?2:1;if(m==='auto')return Math.min(9,Math.max(1,st.photos.length||1));return Number((m.match(/story(\d+)/)||[])[1]||1)}
-function rects(){const n=count(),g=Number($('gap').value),x=mode==='story'?54:0,y=mode==='story'?62:0,w=mode==='story'?W-108:W,h=mode==='story'?H-y-310:H;
-if(mode==='post')return n===1?[{x,y,w,h}]:[{x,y,w,h:h/2},{x,y:h/2,w,h:h/2}];
-if(n===1)return[{x,y,w,h}]; if($('model').value==='story2v')return[{x,y,w:(w-g)/2,h},{x:(x+(w+g)/2),y,w:(w-g)/2,h}]; if($('model').value==='story2h')return[{x,y,w,h:(h-g)/2},{x,y:y+(h+g)/2,w,h:(h-g)/2}];
-if($('model').value==='story3h'){let ch=(h-2*g)/3;return[0,1,2].map(i=>({x,y:y+i*(ch+g),w,h:ch}))} if(n===3)return[{x,y,w,h:(h-g)*.46},{x,y:y+(h+g)*.46,w:(w-g)/2,h:h-(h+g)*.46},{x:x+(w+g)/2,y:y+(h+g)*.46,w:(w-g)/2,h:h-(h+g)*.46}];
-if($('model').value==='story4v'){let cw=(w-3*g)/4;return[0,1,2,3].map(i=>({x:x+i*(cw+g),y,w:cw,h}))} if(n===4){let cw=(w-g)/2,ch=(h-g)/2;return[0,1,2,3].map(i=>({x:x+(i%2)*(cw+g),y:y+Math.floor(i/2)*(ch+g),w:cw,h:ch}))}
-if(n===5){let cw=(w-g)/2,ch=(h-2*g)/3;return[{x,y,w:cw,h:ch*2+g},{x:x+cw+g,y,w:cw,h:ch},{x:x+cw+g,y:y+ch+g,w:cw,h:ch},{x,y:y+ch*2+2*g,w:cw,h:ch},{x:x+cw+g,y:y+ch*2+2*g,w:cw,h:ch}]}
-if(n===6){let cw=(w-g)/2,ch=(h-2*g)/3;return[0,1,2,3,4,5].map(i=>({x:x+(i%2)*(cw+g),y:y+Math.floor(i/2)*(ch+g),w:cw,h:ch}))}
-if(n===7){let cw=(w-2*g)/3,ch=(h-2*g)/3;return[{x,y,w:cw*2+g,h:ch},{x:x+2*(cw+g),y,w:cw,h:ch},{x,y:y+ch+g,w:cw,h:ch},{x:x+cw+g,y:y+ch+g,w:cw,h:ch},{x:x+2*(cw+g),y:y+ch+g,w:cw,h:ch},{x,y:y+2*(ch+g),w:(w-g)/2,h:ch},{x:x+(w+g)/2,y:y+2*(ch+g),w:(w-g)/2,h:ch}]}
-if(n===8){let cw=(w-g)/2,ch=(h-3*g)/4;return[0,1,2,3,4,5,6,7].map(i=>({x:x+(i%2)*(cw+g),y:y+Math.floor(i/2)*(ch+g),w:cw,h:ch}))}
-let cw=(w-2*g)/3,ch=(h-2*g)/3;return[0,1,2,3,4,5,6,7,8].map(i=>({x:x+(i%3)*(cw+g),y:y+Math.floor(i/3)*(ch+g),w:cw,h:ch}))}
-function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
-function cover(photo,r){ctx.save();rr(r.x,r.y,r.w,r.h,mode==='story'?18:0);ctx.clip();ctx.fillStyle='#1d2a43';ctx.fillRect(r.x,r.y,r.w,r.h);
- const media=photo?.kind==='video'?photo.video:photo?.img;
- const mw=photo?.kind==='video'?media?.videoWidth:media?.width, mh=photo?.kind==='video'?media?.videoHeight:media?.height;
- if(media&&mw&&mh){let sc=Math.max(r.w/mw,r.h/mh)*(photo.z||1),dw=mw*sc,dh=mh*sc;ctx.drawImage(media,r.x+(r.w-dw)/2+(photo.dx||0),r.y+(r.h-dh)/2+(photo.dy||0),dw,dh)}
- else{ctx.fillStyle='rgba(255,255,255,.75)';ctx.textAlign='center';ctx.font='700 31px Arial';ctx.fillText('TOQUE PARA ENVIAR FOTO OU VÍDEO',r.x+r.w/2,r.y+r.h/2)}ctx.restore()}
-function wrap(txt,max,font){ctx.font=font;let a=[],line='';for(const word of String(txt||'').trim().split(/\s+/)){let t=line?line+' '+word:word;if(ctx.measureText(t).width<=max||!line)line=t;else{a.push(line);line=word}}if(line)a.push(line);return a}
-function fit(txt,maxW,maxH,weight,start,min,lh){for(let s=start;s>=min;s--){let f=`${weight} ${s}px Roboto,Arial`,lines=wrap(txt,maxW,f),lineH=s*lh;if(lines.length*lineH<=maxH)return{f,lines,lineH,s}}return{f:`${weight} ${min}px Roboto,Arial`,lines:wrap(txt,maxW,`${weight} ${min}px Roboto,Arial`),lineH:min*lh,s:min}}
-function capBox(){if(mode==='story'){let w=+$('storyW').value,h=+$('storyH').value;return{x:(W-w)/2+st.caption.x,y:H-286+st.caption.y,w,h}}return{x:126+st.caption.x,y:H-438+st.caption.y,w:+$('capW').value,h:210+(+$('capH').value)}}
-function logoBox(){return{x:W-365+st.client.x,y:H-318+st.client.y,w:245,h:145}}
-function stateBox(){return{x:W-250,y:128,w:126,h:82}}
-function caption(){if(!$('showCaption').checked)return;let b=capBox();ctx.save();ctx.strokeStyle='#fff';ctx.lineWidth=mode==='story'?2.2:4;if(mode==='story'){rr(b.x,b.y,b.w,b.h,b.h/2);ctx.stroke();let ft=fit($('title').value,b.w-70,b.h-20,'500',31,18,1);ctx.font=ft.f;ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';let cy=b.y+b.h/2-ft.lines.length*ft.lineH/2+ft.lineH/2;ft.lines.forEach(l=>{ctx.fillText(l,b.x+b.w/2,cy);cy+=ft.lineH})}else{rr(b.x,b.y,b.w,b.h,18);ctx.stroke();const pad=32;let title=fit($('title').value,b.w-pad*2,82,'900',42,24,1.05);ctx.textBaseline='top';let ty=b.y+28;const titleGap=22;ctx.font=title.f;title.lines.forEach(l=>{let tw=ctx.measureText(l).width;ctx.fillStyle='#ff0b00';ctx.fillRect(b.x+pad,ty-6,Math.min(b.w-pad*2,tw+28),title.lineH+14);ctx.fillStyle='#fff';ctx.fillText(l,b.x+pad+14,ty);ty+=title.lineH+titleGap});let body=fit($('body').value,b.w-pad*2,b.h-(ty-b.y)-30,'900',34,22,1.1);ctx.font=body.f;ctx.fillStyle='#fff';body.lines.forEach(l=>{ctx.fillText(l,b.x+pad,ty+12);ty+=body.lineH})}ctx.restore()}
-function drawContained(img,b,rounded=0){if(!img)return;ctx.save();if(rounded){rr(b.x,b.y,b.w,b.h,rounded);ctx.clip()}let p=Math.min(b.w,b.h)*.06,sc=Math.min((b.w-p*2)/img.width,(b.h-p*2)/img.height),dw=img.width*sc,dh=img.height*sc;ctx.drawImage(img,b.x+(b.w-dw)/2,b.y+(b.h-dh)/2,dw,dh);ctx.restore()}
-async function preloadBrands(){
-  const si=st.stateOverride||await image(STATES[+$('state').value]?.src);
-  const ci=st.clientOverride||await image(CLIENTS[+$('client').value]?.src);
-  st.stateImg=si;st.clientImg=ci;draw();
+function ensureAudioContext() {
+  if (state.audioCtx) return;
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return;
+  state.audioCtx = new AC();
+  state.audioDest = state.audioCtx.createMediaStreamDestination();
 }
-function draw(){
- ctx.clearRect(0,0,W,H);
- if(mode==='story'){if(frames.story)ctx.drawImage(frames.story,0,0,W,H);else{ctx.fillStyle='#002e6a';ctx.fillRect(0,0,W,H)}}
- else{ctx.fillStyle='#000';ctx.fillRect(0,0,W,H)}
- const rs=rects();rs.forEach((r,i)=>cover(st.photos[i],r));
- if(mode==='post'){
-   const fr=$('model').value==='double'?frames.double:frames.single;if(fr)ctx.drawImage(fr,0,0,W,H);
-   if($('showState').checked)drawContained(st.stateImg,stateBox(),8);
-   if($('showClient').checked)drawContained(st.clientImg,logoBox());
- }
- caption();
- if($('showGuides').checked){ctx.save();ctx.setLineDash([12,8]);ctx.lineWidth=3;ctx.strokeStyle='rgba(255,0,0,.95)';
-   if(mode==='story')ctx.strokeRect(54,62,W-108,H-372);
-   else{let b=capBox();ctx.strokeRect(b.x,b.y,b.w,b.h);let l=logoBox();ctx.strokeStyle='rgba(255,230,0,.95)';ctx.strokeRect(l.x,l.y,l.w,l.h)}
-   ctx.restore()}
+function ensureAudioNodes(item) {
+  if (item.kind!=='video') return;
+  ensureAudioContext();
+  if (!state.audioCtx || item.sourceNode) return;
+  item.sourceNode = state.audioCtx.createMediaElementSource(item.video);
+  item.gainNode = state.audioCtx.createGain();
+  item.gainNode.gain.value = item.audioEnabled ? 1 : 0;
+  item.sourceNode.connect(item.gainNode);
+  item.gainNode.connect(state.audioDest);
 }
-function refreshActive(){let n=count();if(st.active>=n)st.active=0;$('activePhoto').innerHTML=Array.from({length:n},(_,i)=>`<option value="${i}">Foto ${i+1}</option>`).join('');$('activePhoto').value=st.active;let p=st.photos[st.active];$('zoom').value=p?.z||1;$('zoomV').value=(p?.z||1).toFixed(2)}
-function renderAssets(){
- const render=(arr,grid,sel,kind)=>{$(grid).innerHTML=arr.map((a,i)=>`<button class="assetBtn ${+$(sel).value===i?'active':''}" data-kind="${kind}" data-i="${i}" type="button"><img src="${a.src}" alt="${a.name}"><span>${a.name}</span></button>`).join('')};
- $('state').innerHTML=STATES.map((a,i)=>`<option value="${i}">${a.name}</option>`).join('');
- $('client').innerHTML=CLIENTS.map((a,i)=>`<option value="${i}">${a.name}</option>`).join('');
- if(!$('state').dataset.ready){$('state').value=Math.max(0,STATES.findIndex(a=>a.name==='PA'));$('state').dataset.ready='1'}
- if(!$('client').dataset.ready){$('client').value=Math.max(0,CLIENTS.findIndex(a=>a.name.toUpperCase()==='VALE'));$('client').dataset.ready='1'}
- render(STATES,'stateGrid','state','state');render(CLIENTS,'clientGrid','client','client');
- document.querySelectorAll('.assetBtn').forEach(b=>b.onclick=()=>{$(b.dataset.kind).value=b.dataset.i;st[b.dataset.kind==='state'?'stateOverride':'clientOverride']=null;renderAssets();preloadBrands()});
-}
-function renderAudioTracks(){
- const vids=st.photos.filter(p=>p?.kind==='video'), box=$('audioTracks'), sec=$('videoSection');
- sec.classList.toggle('hidden',!vids.length);box.innerHTML='';
- if(!vids.length)return;
- vids.forEach((p,i)=>{const id='audio_'+i;const row=document.createElement('label');row.className='audioTrack';row.innerHTML=`<input id="${id}" type="checkbox" ${p.audioEnabled?'checked':''}> Áudio: ${p.name}`;row.querySelector('input').oninput=e=>{p.audioEnabled=e.target.checked;if(p.gain)p.gain.gain.value=p.audioEnabled?1:0};box.appendChild(row)});
- const duration=Math.max(...vids.map(v=>Math.ceil(v.duration||10)));$('duration').value=duration;
- updateVideoOutputInfo();
-}
-function chooseMime(){
- const types=['video/webm;codecs=vp8,opus','video/webm;codecs=vp9,opus','video/webm','video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4'];
- return types.find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
-}
-function updateVideoOutputInfo(){
- const mime=chooseMime(), fps=$('fps').value, ext=mime.includes('mp4')?'MP4':'WebM';
- $('videoOutputInfo').textContent=mime?`Saída: ${W} × ${H}px • ${fps} fps • ${ext} • captura estável`:'Seu navegador não oferece exportação de vídeo.';
-}
-async function handleFiles(files){
- const accepted=[];
- for(const f of [...files]){try{accepted.push(await fileAsset(f))}catch{toast(`Não foi possível abrir ${f.name}. Use MP4, MOV, WEBM, PNG, JPG ou WEBP.`)}}
- if(accepted.length){st.photos.forEach(p=>{if(p?.kind==='video'&&p.src?.startsWith('blob:'))URL.revokeObjectURL(p.src)});st.photos=accepted;st.active=0;refreshActive();renderAudioTracks();draw();startAnimation()}
-}
-function hasVideo(){return st.photos.some(p=>p?.kind==='video')}
-function startAnimation(){
- if(!hasVideo())return;
- let stopped=false;
- const repaint=()=>{if(stopped||st.rendering||!hasVideo())return;draw();requestAnimationFrame(repaint)};
- requestAnimationFrame(repaint);
-}
-function seek(video,time){return new Promise(resolve=>{const done=()=>{video.removeEventListener('seeked',done);resolve()};video.addEventListener('seeked',done,{once:true});try{video.currentTime=Math.min(Math.max(0,time),Math.max(0,video.duration-.03))}catch(e){resolve()}})}
-async function exportVideo(){
- const videos=st.photos.filter(p=>p?.kind==='video');
- if(!videos.length){toast('Envie ao menos um vídeo para exportar.');return}
- if(!canvas.captureStream||!window.MediaRecorder){toast('Este navegador não permite exportar vídeo.');return}
- const fps=Math.max(24,Number($('fps').value)||30),duration=Math.max(1,Number($('duration').value)||10),mime=chooseMime();
- if(!mime){toast('Nenhum encoder disponível neste navegador.');return}
- try{
-   if(st.audioCtx&&st.audioCtx.state==='suspended')await st.audioCtx.resume();
-   await Promise.all(videos.map(async p=>{p.video.pause();p.video.currentTime=0;p.video.playbackRate=1;await p.video.play().catch(()=>{})}));
-   draw();
-   const stream=canvas.captureStream(0);
-   const videoTrack=stream.getVideoTracks()[0];
-   if(st.audioDest?.stream?.getAudioTracks().length){
-     st.audioDest.stream.getAudioTracks().forEach(t=>stream.addTrack(t));
-   }
-   const options={mimeType:mime,videoBitsPerSecond:mode==='story'?12000000:10000000};
-   if(stream.getAudioTracks().length)options.audioBitsPerSecond=160000;
-   const rec=new MediaRecorder(stream,options);
-   const chunks=[];
-   let recorderError=null;
-   rec.ondataavailable=e=>{if(e.data && e.data.size>0)chunks.push(e.data)};
-   rec.onerror=e=>{recorderError=e.error||e};
-   const stopped=new Promise(resolve=>rec.onstop=resolve);
-   st.rendering=true;
-   rec.start();
-   const totalFrames=Math.ceil(duration*fps);
-   for(let frame=0;frame<totalFrames;frame++){
-     draw();
-     if(videoTrack&&videoTrack.requestFrame)videoTrack.requestFrame();
-     await new Promise(r=>setTimeout(r,1000/fps));
-   }
-   rec.requestData();
-   await new Promise(r=>setTimeout(r,200));
-   rec.stop();
-   await stopped;
-   st.rendering=false;
-   videos.forEach(p=>p.video.pause());
-   const bytes=chunks.reduce((n,c)=>n+c.size,0);
-   if(recorderError||bytes<1024){
-     toast('A exportação não gerou dados. Use Chrome/Android ou Safari recente e tente novamente.');
-     return;
-   }
-   const type=mime.includes('mp4')?'video/mp4':'video/webm';
-   const ext=mime.includes('mp4')?'mp4':'webm';
-   const blob=new Blob(chunks,{type});
-   const a=document.createElement('a');
-   a.download=(mode==='story'?'story':'post')+'_lucena.'+ext;
-   a.href=URL.createObjectURL(blob);
-   a.click();
-   setTimeout(()=>URL.revokeObjectURL(a.href),3000);
-   toast(`Vídeo exportado: ${(bytes/1024/1024).toFixed(1)} MB.`);
- }catch(e){
-   st.rendering=false;
-   toast('Falha na exportação. Use MP4 H.264, Chrome/Safari recente e tente novamente.');
- }
-}
-function point(e){let r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
-function inBox(p,b){return p.x>=b.x&&p.x<=b.x+b.w&&p.y>=b.y&&p.y<=b.y+b.h}
-function hitPhoto(p){let rs=rects();for(let i=rs.length-1;i>=0;i--){let r=rs[i];if(inBox(p,r))return i}return st.active}
-function dragTargetAt(p){
-  if($('showCaption').checked && inBox(p,capBox())) return 'caption';
-  if(mode==='post' && $('showClient').checked && inBox(p,logoBox())) return 'client';
-  return 'photo';
-}
-canvas.addEventListener('pointerdown',e=>{
-  canvas.setPointerCapture(e.pointerId);
-  let p=point(e);
-  st.dragTarget=dragTargetAt(p);
-  if(st.dragTarget==='photo') st.active=hitPhoto(p);
-  st.drag=true;st.last=p;refreshActive();draw();
-});
-canvas.addEventListener('pointermove',e=>{
-  if(!st.drag) return;
-  let p=point(e),dx=p.x-st.last.x,dy=p.y-st.last.y;
-  if(st.dragTarget==='caption'){st.caption.x+=dx;st.caption.y+=dy;}
-  else if(st.dragTarget==='client'){st.client.x+=dx;st.client.y+=dy;}
-  else {
-    let q=st.photos[st.active];
-    if(q){q.dx+=dx;q.dy+=dy;}
+async function handleUpload(files) {
+  const out = [];
+  for (const file of [...files]) {
+    try {
+      if (editorKind==='photo') out.push(await loadImageFile(file));
+      else out.push(await loadVideoFile(file));
+    } catch(e) {
+      toast(`Não foi possível abrir ${file.name}.`);
+    }
   }
-  st.last=p;draw();
-});
-function stopDrag(){st.drag=false;st.dragTarget='photo';}
-canvas.addEventListener('pointerup',stopDrag);
-canvas.addEventListener('pointercancel',stopDrag);
-canvas.addEventListener('wheel',e=>{e.preventDefault();let q=st.photos[st.active];if(q){q.z=Math.max(.5,Math.min(3,q.z+(e.deltaY<0?.06:-.06)));$('zoom').value=q.z;$('zoomV').value=q.z.toFixed(2);draw()}},{passive:false});
-document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>setMode(b.dataset.open));$('backHome').onclick=()=>{$('app').classList.add('hidden');$('home').classList.remove('hidden')};$('photos').onchange=e=>handleFiles(e.target.files);$('activePhoto').onchange=e=>{st.active=+e.target.value;refreshActive()};$('zoom').oninput=e=>{let q=st.photos[st.active];if(q){q.z=+e.target.value;$('zoomV').value=q.z.toFixed(2);draw()}};$('gap').oninput=e=>{$('gapV').value=e.target.value;draw()};
-['model','showCaption','showGuides','title','body','capW','capH','storyW','storyH','showState','showClient'].forEach(id=>$(id).addEventListener('input',()=>{let o=$(id+'V');if(o)o.value=$(id).value;refreshActive();draw()}));
-['state','client'].forEach(id=>$(id).addEventListener('input',()=>{st[id==='state'?'stateOverride':'clientOverride']=null;renderAssets();preloadBrands()}));
-['fps','duration'].forEach(id=>$(id).addEventListener('input',updateVideoOutputInfo));
-$('stateUpload').onchange=async e=>{if(e.target.files[0]){st.stateOverride=(await fileImage(e.target.files[0])).img;draw()}};$('clientUpload').onchange=async e=>{if(e.target.files[0]){st.clientOverride=(await fileImage(e.target.files[0])).img;draw()}};
-document.querySelectorAll('.arrows').forEach(box=>box.querySelectorAll('.arrow:not(.blank)').forEach(btn=>btn.onclick=()=>{let target=box.dataset.move==='caption'?st.caption:st.client;target.x+=+btn.dataset.dx;target.y+=+btn.dataset.dy;draw()}));
-$('center').onclick=()=>{let q=st.photos[st.active];if(q){q.z=1;q.dx=0;q.dy=0;refreshActive();draw()}};$('download').onclick=()=>{draw();let a=document.createElement('a');a.download=(mode==='story'?'story':'post')+'_lucena.png';a.href=canvas.toDataURL('image/png');a.click()};$('downloadVideo').onclick=exportVideo;
-(async()=>{await loadFrames();renderAssets();await preloadBrands();updateVideoOutputInfo();draw()})();
+  if (!out.length) return;
+  state.items.forEach(item=>{ if (item?.kind==='video' && item.src?.startsWith('blob:')) URL.revokeObjectURL(item.src); if (item?.video) item.video.pause(); });
+  state.items = out; state.active=0; refreshActiveMedia(); renderAudioList(); draw(); startPreviewLoop();
+}
+function renderAudioList() {
+  const box=$('audioList'); box.innerHTML='';
+  if (editorKind!=='video') return;
+  state.items.filter(it=>it.kind==='video').forEach((item, idx)=>{
+    const wrap=document.createElement('label'); wrap.className='audioItem';
+    wrap.innerHTML=`<input type="checkbox" ${item.audioEnabled?'checked':''}> Áudio: ${item.name}`;
+    wrap.querySelector('input').oninput=(e)=>{ item.audioEnabled=e.target.checked; if(item.gainNode) item.gainNode.gain.value = item.audioEnabled ? 1 : 0; };
+    box.appendChild(wrap);
+  });
+  const maxDuration = Math.max(1, ...state.items.filter(it=>it.kind==='video').map(it=>Math.ceil(it.duration || 10)));
+  $('duration').value = String(maxDuration);
+}
+function chooseMime() {
+  const tryList = [
+    'video/mp4;codecs=avc1.42E01E,mp4a.40.2',
+    'video/mp4',
+    'video/webm;codecs=vp8,opus',
+    'video/webm;codecs=vp9,opus',
+    'video/webm'
+  ];
+  return tryList.find(t=>window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || '';
+}
+function updateVideoInfo() {
+  if (editorKind!=='video') { $('videoInfo').textContent=''; return; }
+  const mime=chooseMime(), ext=mime.includes('mp4')?'MP4':'WebM', fps=$('fps').value;
+  $('videoInfo').textContent = mime ? `Saída: ${W} × ${H} px • ${fps} fps • ${ext} • áudio original dos vídeos marcados.` : 'Este navegador não oferece exportação de vídeo.';
+}
+function point(evt) { const r=canvas.getBoundingClientRect(); return {x:(evt.clientX-r.left)*W/r.width, y:(evt.clientY-r.top)*H/r.height}; }
+function inBox(p,b) { return p.x>=b.x && p.x<=b.x+b.w && p.y>=b.y && p.y<=b.y+b.h; }
+function hitMedia(p) { const rs=rects(); for (let i=rs.length-1;i>=0;i--) if (inBox(p, rs[i])) return i; return state.active; }
+function detectTarget(p) {
+  if ($('showCaption').checked && inBox(p, captionBox())) return 'caption';
+  if (mode==='post' && $('showClient').checked && inBox(p, logoBox())) return 'client';
+  return 'media';
+}
+function startPreviewLoop() {
+  if (editorKind!=='video' || state.renderLoop) return;
+  state.renderLoop = true;
+  const tick = ()=>{ if (editorKind==='video') draw(); if (state.renderLoop) requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+}
+function stopPreviewLoop() { state.renderLoop=false; }
+async function exportVideo() {
+  if (editorKind!=='video') return;
+  const videos = state.items.filter(it=>it.kind==='video');
+  if (!videos.length) { toast('Envie ao menos um vídeo.'); return; }
+  if (!canvas.captureStream || !window.MediaRecorder) { toast('Seu navegador não permite exportar vídeo.'); return; }
+  const mime = chooseMime(); if (!mime) { toast('Nenhum formato de vídeo suportado neste navegador.'); return; }
+  const fps = Math.max(24, Number($('fps').value)||30);
+  const duration = Math.max(1, Number($('duration').value)||10);
+  try {
+    ensureAudioContext();
+    if (state.audioCtx && state.audioCtx.state==='suspended') await state.audioCtx.resume();
+    videos.forEach(v=>{ ensureAudioNodes(v); v.video.pause(); v.video.currentTime=0; v.video.playbackRate=1; if (v.gainNode) v.gainNode.gain.value = v.audioEnabled ? 1 : 0; });
+    await Promise.all(videos.map(v=>v.video.play().catch(()=>{})));
+    draw();
+    const stream = canvas.captureStream(fps);
+    if (state.audioDest && state.audioDest.stream.getAudioTracks().length) {
+      state.audioDest.stream.getAudioTracks().forEach(track=>stream.addTrack(track));
+    }
+    const opts = {mimeType:mime, videoBitsPerSecond: mode==='story' ? 14000000 : 12000000};
+    if (stream.getAudioTracks().length) opts.audioBitsPerSecond = 192000;
+    const recorder = new MediaRecorder(stream, opts);
+    const chunks = [];
+    let stoppedResolve;
+    const stopped = new Promise(res=>stoppedResolve=res);
+    recorder.ondataavailable = e=>{ if (e.data && e.data.size>0) chunks.push(e.data); };
+    recorder.onstop = ()=>stoppedResolve();
+    recorder.onerror = ()=>toast('Falha ao exportar o vídeo.');
+    recorder.start(1000);
+    const start = performance.now();
+    const liveLoop = now => {
+      draw();
+      if (now - start < duration*1000) requestAnimationFrame(liveLoop);
+      else { recorder.requestData(); recorder.stop(); videos.forEach(v=>v.video.pause()); }
+    };
+    requestAnimationFrame(liveLoop);
+    await stopped;
+    const total = chunks.reduce((n,c)=>n+c.size,0);
+    if (total < 1024) { toast('A exportação não gerou dados. Tente Chrome ou Safari recentes.'); return; }
+    const type = mime.includes('mp4') ? 'video/mp4' : 'video/webm';
+    const ext = mime.includes('mp4') ? 'mp4' : 'webm';
+    const blob = new Blob(chunks, {type});
+    const a=document.createElement('a'); a.download=(mode==='story'?'story':'post')+'_lucena.'+ext; a.href=URL.createObjectURL(blob); a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
+    toast(`Vídeo exportado em ${ext.toUpperCase()}.`);
+  } catch(e) {
+    toast('Falha na exportação. Use Chrome/Safari recentes e tente novamente.');
+  }
+}
+function exportPNG() {
+  draw();
+  const a=document.createElement('a'); a.download=(mode==='story'?'story':'post')+'_lucena.png'; a.href=canvas.toDataURL('image/png'); a.click();
+}
+canvas.addEventListener('pointerdown', e=>{ canvas.setPointerCapture(e.pointerId); const p=point(e); state.dragTarget = detectTarget(p); if (state.dragTarget==='media') state.active = hitMedia(p); state.drag=true; state.last=p; refreshActiveMedia(); });
+canvas.addEventListener('pointermove', e=>{ if (!state.drag) return; const p=point(e), dx=p.x-state.last.x, dy=p.y-state.last.y; if (state.dragTarget==='caption') { state.captionOffset.x += dx; state.captionOffset.y += dy; } else if (state.dragTarget==='client') { state.clientOffset.x += dx; state.clientOffset.y += dy; } else { const it=state.items[state.active]; if(it) { it.dx += dx; it.dy += dy; } } state.last=p; draw(); });
+function stopDrag() { state.drag=false; state.dragTarget='media'; }
+canvas.addEventListener('pointerup', stopDrag); canvas.addEventListener('pointercancel', stopDrag);
+canvas.addEventListener('wheel', e=>{ e.preventDefault(); const it=state.items[state.active]; if (it) { it.z = Math.max(0.5, Math.min(3, (it.z||1) + (e.deltaY < 0 ? 0.06 : -0.06))); $('zoom').value = it.z; $('zoomV').value = it.z.toFixed(2); draw(); } }, {passive:false});
+
+document.querySelectorAll('[data-kind][data-mode]').forEach(btn=>btn.onclick=()=>setEditor(btn.dataset.kind, btn.dataset.mode));
+$('backHome').onclick=()=>{ $('app').classList.add('hidden'); $('home').classList.remove('hidden'); };
+$('mediaInput').onchange=e=>handleUpload(e.target.files);
+$('activeMedia').onchange=e=>{ state.active = Number(e.target.value); refreshActiveMedia(); };
+$('zoom').oninput=e=>{ const it=state.items[state.active]; if(it) { it.z = Number(e.target.value); $('zoomV').value = it.z.toFixed(2); draw(); } };
+$('gap').oninput=e=>{ $('gapV').value = e.target.value; draw(); };
+['model','showCaption','showGuides','titleText','bodyText','postCapW','postCapH','storyCapW','storyCapH','showState','showClient','fps','duration'].forEach(id=>$(id).addEventListener('input',()=>{ const out=$(id+'V'); if(out) out.value=$(id).value; if(id==='model') refreshActiveMedia(); updateVideoInfo(); draw(); }));
+['stateSelect','clientSelect'].forEach(id=>$(id).addEventListener('input',()=>{ renderAssetPickers(); preloadBrands(); }));
+$('stateUpload').onchange=async e=>{ if(e.target.files[0]) { state.stateOverride = (await loadImageFile(e.target.files[0])).img; preloadBrands(); } };
+$('clientUpload').onchange=async e=>{ if(e.target.files[0]) { state.clientOverride = (await loadImageFile(e.target.files[0])).img; preloadBrands(); } };
+document.querySelectorAll('.arrows').forEach(box=>box.querySelectorAll('.arrow:not(.blank)').forEach(btn=>btn.onclick=()=>{ const target = box.dataset.target==='caption' ? state.captionOffset : state.clientOffset; target.x += Number(btn.dataset.dx); target.y += Number(btn.dataset.dy); draw(); }));
+$('centerBtn').onclick=()=>{ const it=state.items[state.active]; if(it) { it.z=1; it.dx=0; it.dy=0; $('zoom').value=1; $('zoomV').value='1.00'; draw(); } };
+$('exportPrimary').onclick=()=>{ if(editorKind==='photo') exportPNG(); else exportVideo(); };
+
+(async()=>{ await loadFixedAssets(); renderAssetPickers(); preloadBrands(); draw(); })();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
 </script>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./service-worker.js').catch(()=>{})}</script></body></html>
+</body>
+</html>
