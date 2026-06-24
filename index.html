@@ -191,12 +191,12 @@ function renderAudioTracks(){
  updateVideoOutputInfo();
 }
 function chooseMime(){
- const types=['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];
+ const types=['video/webm;codecs=vp8,opus','video/webm;codecs=vp9,opus','video/webm','video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4'];
  return types.find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
 }
 function updateVideoOutputInfo(){
  const mime=chooseMime(), fps=$('fps').value, ext=mime.includes('mp4')?'MP4':'WebM';
- $('videoOutputInfo').textContent=mime?`Saída: ${W} × ${H}px • ${fps} fps • ${ext}`:'Seu navegador não oferece exportação de vídeo.';
+ $('videoOutputInfo').textContent=mime?`Saída: ${W} × ${H}px • ${fps} fps • ${ext} • captura estável`:'Seu navegador não oferece exportação de vídeo.';
 }
 async function handleFiles(files){
  const accepted=[];
@@ -214,25 +214,58 @@ function seek(video,time){return new Promise(resolve=>{const done=()=>{video.rem
 async function exportVideo(){
  const videos=st.photos.filter(p=>p?.kind==='video');
  if(!videos.length){toast('Envie ao menos um vídeo para exportar.');return}
- if(!canvas.captureStream||!window.MediaRecorder){toast('Seu navegador não permite exportar vídeo.');return}
- const fps=Number($('fps').value)||30,duration=Math.max(1,Number($('duration').value)||10),mime=chooseMime();
- if(!mime){toast('Formato de exportação não suportado neste navegador.');return}
+ if(!canvas.captureStream||!window.MediaRecorder){toast('Este navegador não permite exportar vídeo.');return}
+ const fps=Math.max(24,Number($('fps').value)||30),duration=Math.max(1,Number($('duration').value)||10),mime=chooseMime();
+ if(!mime){toast('Nenhum encoder disponível neste navegador.');return}
  try{
    if(st.audioCtx&&st.audioCtx.state==='suspended')await st.audioCtx.resume();
-   await Promise.all(videos.map(async p=>{p.video.pause();p.video.playbackRate=1;await seek(p.video,0)}));
-   await Promise.all(videos.map(p=>p.video.play().catch(()=>{})));
-   const stream=canvas.captureStream(fps);
-   if(st.audioDest?.stream?.getAudioTracks().length)st.audioDest.stream.getAudioTracks().forEach(t=>stream.addTrack(t));
-   const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:mode==='story'?18000000:16000000,audioBitsPerSecond:192000});
-   const chunks=[];rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
-   rec.onerror=()=>toast('Falha ao codificar o vídeo neste aparelho.');
-   rec.onstop=()=>{const blob=new Blob(chunks,{type:mime});const ext=mime.includes('mp4')?'mp4':'webm';const a=document.createElement('a');a.download=(mode==='story'?'story':'post')+'_lucena.'+ext;a.href=URL.createObjectURL(blob);a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);toast(`Vídeo exportado em ${ext.toUpperCase()}.`)};
-   st.rendering=true;rec.start(1000);
-   const startTime=performance.now(),frameMs=1000/fps;
-   let next=startTime;
-   function renderFrame(now){if(now>=next){draw();next+=frameMs}if(now-startTime<duration*1000)requestAnimationFrame(renderFrame);else{st.rendering=false;rec.stop();videos.forEach(p=>p.video.pause())}}
-   requestAnimationFrame(renderFrame);toast('Gerando vídeo com áudio e velocidade 1x...')
- }catch(e){st.rendering=false;toast('Não foi possível gerar o vídeo neste aparelho.')}
+   await Promise.all(videos.map(async p=>{p.video.pause();p.video.currentTime=0;p.video.playbackRate=1;await p.video.play().catch(()=>{})}));
+   draw();
+   const stream=canvas.captureStream(0);
+   const videoTrack=stream.getVideoTracks()[0];
+   if(st.audioDest?.stream?.getAudioTracks().length){
+     st.audioDest.stream.getAudioTracks().forEach(t=>stream.addTrack(t));
+   }
+   const options={mimeType:mime,videoBitsPerSecond:mode==='story'?12000000:10000000};
+   if(stream.getAudioTracks().length)options.audioBitsPerSecond=160000;
+   const rec=new MediaRecorder(stream,options);
+   const chunks=[];
+   let recorderError=null;
+   rec.ondataavailable=e=>{if(e.data && e.data.size>0)chunks.push(e.data)};
+   rec.onerror=e=>{recorderError=e.error||e};
+   const stopped=new Promise(resolve=>rec.onstop=resolve);
+   st.rendering=true;
+   rec.start();
+   const totalFrames=Math.ceil(duration*fps);
+   for(let frame=0;frame<totalFrames;frame++){
+     draw();
+     if(videoTrack&&videoTrack.requestFrame)videoTrack.requestFrame();
+     await new Promise(r=>setTimeout(r,1000/fps));
+   }
+   rec.requestData();
+   await new Promise(r=>setTimeout(r,200));
+   rec.stop();
+   await stopped;
+   st.rendering=false;
+   videos.forEach(p=>p.video.pause());
+   const bytes=chunks.reduce((n,c)=>n+c.size,0);
+   if(recorderError||bytes<1024){
+     toast('A exportação não gerou dados. Use Chrome/Android ou Safari recente e tente novamente.');
+     return;
+   }
+   const type=mime.includes('mp4')?'video/mp4':'video/webm';
+   const ext=mime.includes('mp4')?'mp4':'webm';
+   const blob=new Blob(chunks,{type});
+   const a=document.createElement('a');
+   a.download=(mode==='story'?'story':'post')+'_lucena.'+ext;
+   a.href=URL.createObjectURL(blob);
+   a.click();
+   setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+   toast(`Vídeo exportado: ${(bytes/1024/1024).toFixed(1)} MB.`);
+ }catch(e){
+   st.rendering=false;
+   toast('Falha na exportação. Use MP4 H.264, Chrome/Safari recente e tente novamente.');
+ }
 }
 function point(e){let r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
 function inBox(p,b){return p.x>=b.x&&p.x<=b.x+b.w&&p.y>=b.y&&p.y<=b.y+b.h}

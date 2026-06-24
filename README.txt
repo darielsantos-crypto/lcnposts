@@ -7,3 +7,10 @@ MOV NÃO É UM FORMATO QUE UM PWA/NAVEGADOR CONSIGA GARANTIR NATIVAMENTE. Para M
 Este pacote corrige o preview e a exportação para renderização síncrona, sem recarregar logos/bandeiras a cada frame. Mantém os vídeos em velocidade 1x e permite ativar/silenciar o áudio de cada vídeo. A composição é exportada na resolução fixa do projeto: Post 1638×2048 e Stories 1080×1920.
 
 Recomendação: MP4 H.264/AAC para maior compatibilidade. MOV, AVI e MKV podem ser escolhidos no upload, mas a leitura depende do codec disponível no navegador.
+
+
+CORREÇÃO DE EXPORTAÇÃO
+- O exportador agora solicita cada frame ao stream do canvas, em vez de depender apenas do ciclo visual da tela.
+- Usa WebM VP8/Opus como primeira opção por estabilidade em navegadores Chromium; MP4 fica como alternativa quando WebM não estiver disponível.
+- Antes de baixar, valida se houve dados reais. Não cria mais arquivo de 0 KB silenciosamente.
+- Para melhor resultado: Chrome recente no Android/desktop ou Safari recente no iPhone, com vídeo MP4 H.264/AAC.
