@@ -1,17 +1,24 @@
-LUCENA EDITOR — FOTO E VÍDEO SEPARADOS
+LUCENA EDITOR — PACOTE MOBILE
+
+Abra index.html no navegador. Para instalar no Android:
+1. Hospede a pasta em um endereço HTTPS ou abra pelo navegador compatível.
+2. Use “Adicionar à tela inicial” / “Instalar app”.
 
 Estrutura:
-- Post • Fotos
-- Stories • Fotos
-- Post • Vídeos
-- Stories • Vídeos
+- index.html: aplicação principal leve, sem assets em base64.
+- assets/estados: bandeiras reais.
+- assets/clientes: logos reais.
+- assets/frames: frames de post.
+- assets/background: fundo dos Stories.
+- manifest.webmanifest e service-worker.js: suporte de PWA.
 
-O editor de vídeo foi separado para reduzir travamentos:
-- aceita somente vídeos no modo de vídeo;
-- mantém exportação na resolução do projeto;
-- usa áudio original dos vídeos marcados;
-- tenta exportar em MP4 quando o navegador suporta; caso contrário, usa WebM;
-- para Instagram, o melhor cenário é MP4/H.264/AAC em navegadores compatíveis.
+Importação de imagens:
+- PNG, JPG, JPEG, WEBP, GIF e SVG são suportados pelos navegadores atuais.
+- HEIC/HEIF funciona em aparelhos/navegadores que disponibilizam decodificação nativa (em especial iOS/Safari).
+- PSD/PSB é aceito no seletor, mas navegadores não renderizam PSD nativamente sem um decodificador específico. Caso não abra, exporte em PNG/JPG/WEBP antes de importar.
 
-Observação técnica:
-Exportação de vídeo em navegador depende do codec que o próprio aparelho/navegador oferece ao MediaRecorder. Por isso, MP4 pode funcionar em alguns aparelhos e WebM em outros. O sistema mostra o formato disponível antes de exportar.
+
+Vídeos:
+- Aceita MP4, MOV, M4V, WEBM, OGV/OGG, AVI, MKV e 3GP no seletor.
+- A reprodução depende do codec que o navegador do aparelho suporta. MP4 (H.264/AAC), MOV com H.264 e WEBM costumam ser as opções mais confiáveis.
+- Quando houver vídeo, o botão “Baixar vídeo (WebM)” exporta uma composição de 10 segundos em WebM em navegadores compatíveis.
