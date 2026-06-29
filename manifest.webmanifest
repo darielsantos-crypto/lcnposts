@@ -1,10 +1,10 @@
 {
-  "name": "Lucena Editor",
+  "name": "Lucena Editor App",
   "short_name": "Lucena Editor",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#002e6a",
-  "theme_color": "#002e6a",
+  "background_color": "#083f78",
+  "theme_color": "#083f78",
   "icons": [
     {
       "src": "assets/app/icon-192.png",
