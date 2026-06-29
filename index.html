@@ -241,7 +241,12 @@ canvas.addEventListener('pointerdown',e=>{
   if(mode==='story' && st.dragTarget==='storyElement' && st.activeStoryElement>-1 && ids.length===2){
     const [id1,id2]=ids;
     const p1=st.pointers[id1],p2=st.pointers[id2],el=st.storyElements[st.activeStoryElement];
-    st.pinch={idx:st.activeStoryElement,startDist:Math.max(1,dist(p1,p2)),startW:el.w||240,startMid:{x:(p1.x+p2.x)/2,y:(p1.y+p2.y)/2},startX:el.x||0,startY:el.y||0};
+    st.pinch={target:'storyElement',idx:st.activeStoryElement,startDist:Math.max(1,dist(p1,p2)),startW:el.w||240,startMid:{x:(p1.x+p2.x)/2,y:(p1.y+p2.y)/2},startX:el.x||0,startY:el.y||0};
+    st.drag=false;
+  }else if(mode==='story' && st.dragTarget==='caption' && ids.length===2){
+    const [id1,id2]=ids;
+    const p1=st.pointers[id1],p2=st.pointers[id2];
+    st.pinch={target:'storyCaption',startDist:Math.max(1,dist(p1,p2)),startMid:{x:(p1.x+p2.x)/2,y:(p1.y+p2.y)/2},startW:+$('storyW').value,startH:+$('storyH').value,startCaptionX:st.caption.x,startCaptionY:st.caption.y};
     st.drag=false;
   }else{
     st.drag=true;st.last=p;
@@ -253,13 +258,27 @@ canvas.addEventListener('pointermove',e=>{
   if(st.pointers[e.pointerId]) st.pointers[e.pointerId]=p;
   const ids=Object.keys(st.pointers);
   if(st.pinch && ids.length>=2){
-    const p1=st.pointers[ids[0]],p2=st.pointers[ids[1]],el=st.storyElements[st.pinch.idx];
-    if(el&&p1&&p2){
-      const factor=Math.max(.2,dist(p1,p2)/st.pinch.startDist),mid={x:(p1.x+p2.x)/2,y:(p1.y+p2.y)/2};
-      el.w=Math.max(60,Math.min(1400,st.pinch.startW*factor));
-            el.x=st.pinch.startX + (mid.x-st.pinch.startMid.x);
-      el.y=st.pinch.startY + (mid.y-st.pinch.startMid.y);
-      $('storyElementW').value=Math.round(el.w);$('storyElementWV').value=Math.round(el.w);
+    const p1=st.pointers[ids[0]],p2=st.pointers[ids[1]];
+    if(st.pinch.target==='storyElement'){
+      const el=st.storyElements[st.pinch.idx];
+      if(el&&p1&&p2){
+        const factor=Math.max(.2,dist(p1,p2)/st.pinch.startDist),mid={x:(p1.x+p2.x)/2,y:(p1.y+p2.y)/2};
+        el.w=Math.max(60,Math.min(1400,st.pinch.startW*factor));
+        el.x=st.pinch.startX + (mid.x-st.pinch.startMid.x);
+        el.y=st.pinch.startY + (mid.y-st.pinch.startMid.y);
+        $('storyElementW').value=Math.round(el.w);$('storyElementWV').value=Math.round(el.w);
+        draw();
+        return;
+      }
+    }else if(st.pinch.target==='storyCaption' && p1 && p2){
+      const factor=Math.max(.45,Math.min(2.4,dist(p1,p2)/st.pinch.startDist));
+      const mid={x:(p1.x+p2.x)/2,y:(p1.y+p2.y)/2};
+      const nextW=Math.max(560,Math.min(980,Math.round(st.pinch.startW*factor)));
+      const nextH=Math.max(58,Math.min(140,Math.round(st.pinch.startH*factor)));
+      $('storyW').value=nextW; $('storyWV').value=nextW;
+      $('storyH').value=nextH; $('storyHV').value=nextH;
+      st.caption.x=st.pinch.startCaptionX + (mid.x-st.pinch.startMid.x);
+      st.caption.y=st.pinch.startCaptionY + (mid.y-st.pinch.startMid.y);
       draw();
       return;
     }
