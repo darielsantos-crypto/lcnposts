@@ -18,7 +18,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
 #app{min-height:100svh}.appHead{height:64px;padding:0 18px;display:flex;align-items:center;gap:12px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}.back{border:0;background:#eef3f9;color:var(--blue);width:38px;height:38px;border-radius:12px;font-size:20px;font-weight:900}.appHead strong{font-size:16px}.appHead .formatPill{margin-left:auto;background:#eef4fb;color:var(--blue);padding:8px 11px;border-radius:999px;font-weight:800;font-size:12px}
 .editor{display:grid;grid-template-columns:380px 1fr;gap:16px;padding:16px;align-items:start}.panel{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;position:sticky;top:80px;max-height:calc(100svh - 96px);display:flex;flex-direction:column}.panelScroll{overflow:auto;padding:14px}.section{border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:12px}.section h3{margin:0 0 11px;color:var(--blue);font-size:13px;text-transform:uppercase;letter-spacing:.04em}.field{margin-bottom:11px}.field:last-child{margin:0}label{display:block;font-size:12px;font-weight:800;color:#293a51;margin-bottom:6px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}select,textarea,input[type=text]{width:100%;border:1px solid var(--line);background:#f9fbfe;color:var(--ink);border-radius:12px;padding:11px 12px;outline:none}textarea{min-height:86px;resize:vertical}.toggle{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:800}.toggle input{width:17px;height:17px;accent-color:var(--red)}.range{display:flex;gap:9px;align-items:center}.range input{width:100%;accent-color:var(--red)}.range output{width:32px;color:var(--muted);font-size:12px;text-align:right}.fileDrop{border:1.5px dashed #b9cadc;border-radius:14px;padding:12px;background:#f8fbff}.fileDrop input{width:100%;font-size:12px}.assetList{max-height:210px;overflow:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}.assetBtn{height:60px;border:1px solid var(--line);background:#fbfdff;border-radius:10px;padding:4px;position:relative;overflow:hidden}.assetBtn.active{outline:2px solid var(--red);border-color:var(--red)}.assetBtn img{width:100%;height:100%;object-fit:contain}.assetBtn span{display:none;position:absolute;bottom:0;left:0;right:0;font-size:8px;background:rgba(255,255,255,.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.assetBtn:hover span{display:block}.miniActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.miniBtn{height:40px;border:1px solid var(--line);background:#eef4fb;color:var(--blue);border-radius:12px;font-weight:900}.subHint{display:none}.assetList.storyShort{max-height:150px}
 .moveGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.moveBox{border:1px solid var(--line);background:#f9fbfe;border-radius:14px;padding:10px}.moveBox h4{margin:0 0 7px;font-size:12px;color:var(--blue)}.arrows{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-width:135px;margin:auto}.arrow{height:30px;border:1px solid #c8d5e4;background:white;color:var(--blue);border-radius:8px;font-weight:900}.arrow.blank{visibility:hidden}.quick{display:none}.actions{padding:12px;border-top:1px solid var(--line);display:grid;gap:8px}.primary{border:0;background:var(--blue);color:#fff;padding:13px;border-radius:13px;font-weight:900}.ghost{border:0;background:#eef4fb;color:var(--blue);padding:12px;border-radius:13px;font-weight:800}
-.stageWrap{min-width:0;display:flex;justify-content:center;background:#101b2d;border-radius:22px;padding:18px;min-height:calc(100svh - 96px)}.stage{width:min(100%,760px);display:flex;justify-content:center;align-items:flex-start}canvas{display:block;max-width:100%;height:auto;background:#000;border-radius:10px;touch-action:none}
+.stageWrap{min-width:0;display:flex;justify-content:center;background:#101b2d;border-radius:22px;padding:18px;min-height:calc(100svh - 96px)}.stage{width:min(100%,760px);display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:10px}canvas{display:block;max-width:100%;height:auto;background:#000;border-radius:10px;touch-action:none}.storyStageActions{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}.storyLockBtn{border:0;background:#eef4fb;color:#002e6a;border-radius:13px;padding:11px 16px;font-weight:900}.storyLockBtn.isLocked{background:#0e7a37;color:#fff}.storyLockState{font-size:12px;color:#dce8f8;font-weight:700}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#13243c;color:#fff;padding:11px 15px;border-radius:999px;font-size:13px;z-index:100;box-shadow:0 8px 25px rgba(0,0,0,.18)}
 @media(max-width:900px){.editor{display:block;padding:0}.panel{position:relative;top:0;border:0;border-radius:0;max-height:none;order:2}.panelScroll{padding:12px}.stageWrap{border-radius:0;padding:10px;min-height:auto}.appHead{padding-top:var(--safe);height:calc(64px + var(--safe))}.section{border-radius:15px}.choiceGrid{grid-template-columns:1fr}.choice{min-height:150px}.homeCard{padding-top:var(--safe)}.row4{grid-template-columns:repeat(4,1fr)}}
 </style>
@@ -92,7 +92,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
    </div>
    <div class="actions"><button class="primary" id="download">Baixar PNG</button><button class="ghost" id="center">Centralizar foto</button></div>
   </aside>
-  <section class="stageWrap"><div class="stage"><canvas id="canvas"></canvas></div></section>
+  <section class="stageWrap"><div class="stage"><canvas id="canvas"></canvas><div id="storyStageActions" class="storyStageActions hidden"><button id="lockPhotosBtn" type="button" class="storyLockBtn">Salvar posição das fotos</button><span id="lockPhotosState" class="storyLockState"></span></div></div></section>
  </main>
 </section>
 <div id="toast" class="toast hidden"></div>
@@ -106,7 +106,7 @@ const $=id=>document.getElementById(id), canvas=$('canvas'),ctx=canvas.getContex
 ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
 const imgCache=new Map();
 let mode='post',W=1638,H=2048,frames={single:null,double:null,story:null};
-const st={photos:[],active:0,stateOverride:null,clientOverride:null,storyBgOverride:null,selectedStoryBg:0,selectedStoryElement:0,storyElements:[],activeStoryElement:-1,caption:{x:0,y:0},client:{x:0,y:0},drag:false,dragTarget:'photo',last:null,pinch:null,pointers:{},rendering:false,drawScheduled:false,drawPending:false};
+const st={photos:[],active:0,stateOverride:null,clientOverride:null,storyBgOverride:null,selectedStoryBg:0,selectedStoryElement:0,storyElements:[],activeStoryElement:-1,photosLocked:false,caption:{x:0,y:0},client:{x:0,y:0},drag:false,dragTarget:'photo',last:null,pinch:null,pointers:{},rendering:false,drawScheduled:false,drawPending:false};
 const models={
  post:[['single','1 foto'],['double','2 fotos']],
  story:[['auto','Automático'],['story1','1 foto inteira'],['story2h','2 fotos empilhadas'],['story3top2','1 em cima + 2 embaixo'],['story3stack','3 fotos empilhadas'],['story4quad','4 fotos grade'],['story5sandwich','5 fotos: 1 + 3 + 1'],['story6grid','6 fotos grade'],['story7combo','7 fotos: 1 + 3 + 3'],['story8grid','8 fotos grade'],['story9grid','9 fotos grade']]
@@ -115,7 +115,16 @@ function toast(m){const e=$('toast');e.textContent=m;e.classList.remove('hidden'
 function image(src){if(!src)return Promise.resolve(null);if(imgCache.has(src))return imgCache.get(src);const prom=new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.decoding='async';i.src=src});imgCache.set(src,prom);return prom}
 async function loadFrames(){frames.single=await image(ASSETS.frameSingle);frames.double=await image(ASSETS.frameDouble);frames.story=await image(ASSETS.storyBg)}
 function fileImage(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>image(r.result).then(img=>img?resolve({img,src:r.result,z:1,dx:0,dy:0,name:file.name}):reject());r.onerror=reject;r.readAsDataURL(file)})}
-function setMode(m){mode=m;W=mode==='story'?1080:1638;H=mode==='story'?1920:2048;canvas.width=W;canvas.height=H;$('home').classList.add('hidden');$('app').classList.remove('hidden');$('editorTitle').textContent=mode==='story'?'Stories':'Post';$('formatPill').textContent=mode==='story'?'9:16':'4:5';document.querySelectorAll('.postOnly').forEach(e=>e.classList.toggle('hidden',mode==='story'));document.querySelectorAll('.storyOnly').forEach(e=>e.classList.toggle('hidden',mode!=='story'));$('captionToggle').classList.remove('hidden');$('captionHeading').textContent=mode==='story'?'Legenda do Story':'Legenda';$('titleLabel').textContent=mode==='story'?'Texto da barra inferior':'Título';$('captionMoveLabel').textContent=mode==='story'?'Barra':'Legenda';refreshModels();draw()}
+function updatePhotoLockUI(){
+  const story=mode==='story';
+  const locked=story&&st.photosLocked;
+  $('storyStageActions').classList.toggle('hidden',!story);
+  $('lockPhotosBtn').classList.toggle('isLocked',locked);
+  $('lockPhotosBtn').textContent=locked?'Editar fotos':'Salvar posição das fotos';
+  $('lockPhotosState').textContent=locked?'Fotos fixadas':'';
+  ['photos','model','activePhoto','zoom','gap','center'].forEach(id=>{const el=$(id);if(el)el.disabled=locked;});
+}
+function setMode(m){mode=m;st.photosLocked=false;W=mode==='story'?1080:1638;H=mode==='story'?1920:2048;canvas.width=W;canvas.height=H;$('home').classList.add('hidden');$('app').classList.remove('hidden');$('editorTitle').textContent=mode==='story'?'Stories':'Post';$('formatPill').textContent=mode==='story'?'9:16':'4:5';document.querySelectorAll('.postOnly').forEach(e=>e.classList.toggle('hidden',mode==='story'));document.querySelectorAll('.storyOnly').forEach(e=>e.classList.toggle('hidden',mode!=='story'));$('captionToggle').classList.remove('hidden');$('captionHeading').textContent=mode==='story'?'Legenda do Story':'Legenda';$('titleLabel').textContent=mode==='story'?'Texto da barra inferior':'Título';$('captionMoveLabel').textContent=mode==='story'?'Barra':'Legenda';refreshModels();updatePhotoLockUI();draw()}
 function refreshModels(){let cur=$('model').value;$('model').innerHTML=models[mode].map(v=>`<option value="${v[0]}">${v[1]}</option>`).join('');if([...$('model').options].some(o=>o.value===cur))$('model').value=cur;else $('model').value=mode==='story'?'auto':'single';if(mode==='story')$('showCaption').checked=true;refreshActive()}
 function count(){let m=$('model').value;if(mode==='post')return m==='double'?2:1;if(m==='auto')return Math.min(9,Math.max(1,st.photos.length||1));return Number((m.match(/story(\d+)/)||[])[1]||1)}
 function rects(){const n=count(),g=Number($('gap').value),x=mode==='story'?54:0,y=mode==='story'?62:0,w=mode==='story'?W-108:W,h=mode==='story'?H-y-310:H;
@@ -156,7 +165,7 @@ async function renderNow(){ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQual
 function draw(){st.drawPending=true;if(st.rendering||st.drawScheduled)return;st.drawScheduled=true;requestAnimationFrame(async()=>{st.drawScheduled=false;if(st.rendering)return;st.rendering=true;try{do{st.drawPending=false;await renderNow()}while(st.drawPending)}finally{st.rendering=false}})}
 function refreshActive(){let n=count();if(st.active>=n)st.active=0;$('activePhoto').innerHTML=Array.from({length:n},(_,i)=>`<option value="${i}">Foto ${i+1}</option>`).join('');$('activePhoto').value=st.active;let p=st.photos[st.active];$('zoom').value=p?.z||1;$('zoomV').value=(p?.z||1).toFixed(2)}
 function renderAssets(){let render=(arr,grid,sel,kind)=>{$(grid).innerHTML=arr.map((a,i)=>`<button class="assetBtn ${+$(sel).value===i?'active':''}" data-kind="${kind}" data-i="${i}" type="button"><img src="${a.src}" alt="${a.name}"><span>${a.name}</span></button>`).join('')};$('state').innerHTML=STATES.map((a,i)=>`<option value="${i}">${a.name}</option>`).join('');$('client').innerHTML=CLIENTS.map((a,i)=>`<option value="${i}">${a.name}</option>`).join('');if(!$('state').dataset.ready){$('state').value=Math.max(0,STATES.findIndex(a=>a.name==='PA'));$('client').value=Math.max(0,CLIENTS.findIndex(a=>a.name.toUpperCase()==='VALE'));$('state').dataset.ready='1';}render(STATES,'stateGrid','state','state');render(CLIENTS,'clientGrid','client','client');document.querySelectorAll('#stateGrid .assetBtn,#clientGrid .assetBtn').forEach(b=>b.onclick=()=>{$(b.dataset.kind).value=b.dataset.i;renderAssets();draw()});refreshStoryAssetGrids();refreshStoryElementControls()}
-function handleFiles(files){let accepted=[];[...files].forEach(async f=>{try{let p=await fileImage(f);accepted.push(p);if(accepted.length===[...files].length){st.photos=accepted;st.active=0;refreshActive();draw()}}catch{toast(`Não foi possível abrir ${f.name}. HEIC e PSD dependem do suporte do navegador; use PNG, JPG, JPEG ou WEBP se necessário.`)}})}
+async function handleFiles(files){const list=[...files];if(!list.length)return;try{const loaded=await Promise.all(list.map(fileImage));st.photos=loaded;st.active=0;st.photosLocked=false;refreshActive();updatePhotoLockUI();draw()}catch{toast('Uma ou mais fotos não puderam ser abertas. Para melhor compatibilidade, use PNG, JPG, JPEG ou WEBP.')}}
 function point(e){let r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
 function inBox(p,b){return p.x>=b.x&&p.x<=b.x+b.w&&p.y>=b.y&&p.y<=b.y+b.h}
 function hitPhoto(p){let rs=rects();for(let i=rs.length-1;i>=0;i--){let r=rs[i];if(inBox(p,r))return i}return st.active}
@@ -164,6 +173,7 @@ function dragTargetAt(p){
   if(mode==='story'){let idx=hitStoryElement(p);if(idx>-1){st.activeStoryElement=idx;refreshStoryElementControls();return 'storyElement';}}
   if($('showCaption').checked && inBox(p,capBox())) return 'caption';
   if(mode==='post' && $('showClient').checked && inBox(p,logoBox())) return 'client';
+  if(mode==='story' && st.photosLocked) return 'locked';
   return 'photo';
 }
 canvas.addEventListener('pointerdown',e=>{
@@ -172,6 +182,7 @@ canvas.addEventListener('pointerdown',e=>{
   st.pointers[e.pointerId]=p;
   st.dragTarget=dragTargetAt(p);
   if(st.dragTarget==='photo') st.active=hitPhoto(p);
+  if(st.dragTarget==='locked'){st.drag=false;st.last=null;refreshActive();return;}
   if(st.dragTarget==='storyElement' && mode==='story'){
     st.activeStoryElement=hitStoryElement(p);
     refreshStoryElementControls();
@@ -220,7 +231,7 @@ canvas.addEventListener('pointerup',stopDrag);
 canvas.addEventListener('pointercancel',stopDrag);
 
 // Navegação e controles principais
-function resetEditor(){st.photos=[];st.active=0;st.caption={x:0,y:0};st.client={x:0,y:0};st.storyElements=[];st.activeStoryElement=-1;st.storyBgOverride=null;st.selectedStoryBg=0;refreshActive();refreshStoryElementControls();}
+function resetEditor(){st.photos=[];st.active=0;st.photosLocked=false;st.caption={x:0,y:0};st.client={x:0,y:0};st.storyElements=[];st.activeStoryElement=-1;st.storyBgOverride=null;st.selectedStoryBg=0;refreshActive();refreshStoryElementControls();updatePhotoLockUI();}
 document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{resetEditor();setMode(b.dataset.open)});
 $('backHome').onclick=()=>{$('app').classList.add('hidden');$('home').classList.remove('hidden')};
 $('photos').onchange=e=>handleFiles(e.target.files);
@@ -237,7 +248,8 @@ $('addStoryElement').onclick=()=>{let base=STORY_ELEMENTS[st.selectedStoryElemen
 $('removeStoryElement').onclick=()=>{if(st.activeStoryElement<0)return;st.storyElements.splice(st.activeStoryElement,1);if(st.activeStoryElement>=st.storyElements.length)st.activeStoryElement=st.storyElements.length-1;refreshStoryElementControls();draw();};
 $('storyElementSelect').onchange=e=>{st.activeStoryElement=+e.target.value;refreshStoryElementControls();draw()};
 $('storyElementW').oninput=e=>{let val=+e.target.value;$('storyElementWV').value=val;let el=st.storyElements[st.activeStoryElement];if(el){el.w=val;draw()}};
-$('center').onclick=()=>{let q=st.photos[st.active];if(q){q.z=1;q.dx=0;q.dy=0;refreshActive();draw()}};$('download').onclick=async()=>{await renderNow();canvas.toBlob(blob=>{if(!blob){toast('Não foi possível gerar a imagem.');return;}let a=document.createElement('a');let url=URL.createObjectURL(blob);a.download=(mode==='story'?'story':'post')+'_lucena.png';a.href=url;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);},'image/png')};
-(async()=>{await loadFrames();renderAssets();refreshStoryElementControls();draw()})();
+$('lockPhotosBtn').onclick=()=>{if(mode!=='story')return;st.photosLocked=!st.photosLocked;updatePhotoLockUI();draw();};
+$('center').onclick=()=>{if(mode==='story'&&st.photosLocked)return;let q=st.photos[st.active];if(q){q.z=1;q.dx=0;q.dy=0;refreshActive();draw()}};$('download').onclick=async()=>{await renderNow();canvas.toBlob(blob=>{if(!blob){toast('Não foi possível gerar a imagem.');return;}let a=document.createElement('a');let url=URL.createObjectURL(blob);a.download=(mode==='story'?'story':'post')+'_lucena.png';a.href=url;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);},'image/png')};
+(async()=>{await loadFrames();renderAssets();refreshStoryElementControls();updatePhotoLockUI();draw()})();
 </script>
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./service-worker.js').catch(()=>{})}</script></body></html>
