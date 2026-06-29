@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<base href="./">
+<link rel="icon" type="image/png" href="assets/app/icon-192.png">
 <meta name="theme-color" content="#002e6a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -20,7 +22,10 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
 .moveGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.moveBox{border:1px solid var(--line);background:#f9fbfe;border-radius:14px;padding:10px}.moveBox h4{margin:0 0 7px;font-size:12px;color:var(--blue)}.arrows{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-width:135px;margin:auto}.arrow{height:30px;border:1px solid #c8d5e4;background:white;color:var(--blue);border-radius:8px;font-weight:900}.arrow.blank{visibility:hidden}.quick{display:none}.actions{padding:12px;border-top:1px solid var(--line);display:grid;gap:8px}.primary{border:0;background:var(--blue);color:#fff;padding:13px;border-radius:13px;font-weight:900}.ghost{border:0;background:#eef4fb;color:var(--blue);padding:12px;border-radius:13px;font-weight:800}
 .stageWrap{min-width:0;display:flex;justify-content:center;background:#101b2d;border-radius:22px;padding:18px;min-height:calc(100svh - 96px)}.stage{width:min(100%,760px);display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:10px}canvas{display:block;max-width:100%;height:auto;background:#000;border-radius:10px;touch-action:none}.storyStageActions{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}.storyLockBtn{border:0;background:#eef4fb;color:#002e6a;border-radius:13px;padding:11px 16px;font-weight:900}.storyLockBtn.isLocked{background:#0e7a37;color:#fff}.storyLockState{font-size:12px;color:#dce8f8;font-weight:700}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#13243c;color:#fff;padding:11px 15px;border-radius:999px;font-size:13px;z-index:100;box-shadow:0 8px 25px rgba(0,0,0,.18)}
-@media(max-width:900px){.editor{display:block;padding:0}.panel{position:relative;top:0;border:0;border-radius:0;max-height:none;order:2}.panelScroll{padding:12px}.stageWrap{border-radius:0;padding:10px;min-height:auto}.appHead{padding-top:var(--safe);height:calc(64px + var(--safe))}.section{border-radius:15px}.choiceGrid{grid-template-columns:1fr}.choice{min-height:150px}.homeCard{padding-top:var(--safe)}.row4{grid-template-columns:repeat(4,1fr)}}
+
+/* Fluxo de produção: elimina a rolagem excessiva e mantém apenas o ajuste da etapa atual. */
+.workflow{display:flex;gap:7px;align-items:center;padding:10px 16px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:64px;z-index:19;overflow:auto;scrollbar-width:none}.workflow::-webkit-scrollbar{display:none}.workflowStep{flex:1;min-width:78px;border:0;background:#edf2f7;color:#718096;border-radius:999px;padding:8px 10px;font-size:11px;font-weight:900;white-space:nowrap}.workflowStep.active{background:var(--red);color:#fff}.workflowStep.done{background:#dcebf8;color:var(--blue)}.section[data-step]{display:none}.section[data-step].isActive{display:block}.workflowActions{padding:12px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:8px;background:#fff}.workflowActions button{min-height:46px;border-radius:14px;font-weight:900}.navBack{border:1px solid #d6e1ec;background:#f1f5f9;color:#66788b}.navPreview{border:1px solid #bed6ed;background:#e6f1fb;color:var(--blue)}.navNext{border:0;background:#1282c4;color:#fff}.navNext.finish{background:#0e7a37}.actions{display:none}.workflowMeta{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:11px;font-weight:900;color:#738197;white-space:nowrap}.workflowMeta b{color:var(--blue)}#app.previewing .panel,#app.previewing .workflow{display:none}#app.previewing .editor{display:block;padding:0}#app.previewing .stageWrap{position:fixed;inset:64px 0 0;z-index:60;border-radius:0;min-height:calc(100svh - 64px);padding:14px;overflow:auto;background:#071320}#app.previewing .stage{min-height:100%;justify-content:center}#app.previewing .appHead{z-index:61}#app.previewing #previewToggle{background:var(--red);color:#fff;border-color:var(--red)}
+@media(max-width:900px){.editor{display:block;padding:0}.panel{position:relative;top:0;border:0;border-radius:0;max-height:none;order:2}.panelScroll{padding:12px}.stageWrap{border-radius:0;padding:10px;min-height:auto}.appHead{padding-top:var(--safe);height:calc(64px + var(--safe))}.workflow{top:calc(64px + var(--safe));padding:9px 12px}.workflowStep{min-width:72px;font-size:10px}.workflowMeta{display:none}.workflowActions{position:sticky;bottom:0;z-index:18;padding:10px 12px;box-shadow:0 -8px 22px rgba(10,30,50,.08)}#app.previewing .stageWrap{inset:calc(64px + var(--safe)) 0 0;min-height:calc(100svh - 64px - var(--safe))}.section{border-radius:15px}.choiceGrid{grid-template-columns:1fr}.choice{min-height:150px}.homeCard{padding-top:var(--safe)}.row4{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
@@ -34,17 +39,25 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
  </div>
 </section>
 <section id="app" class="hidden">
- <header class="appHead"><button class="back" id="backHome">‹</button><strong id="editorTitle">Post</strong><span id="formatPill" class="formatPill"></span></header>
+ <header class="appHead"><button class="back" id="backHome" aria-label="Voltar ao início">‹</button><strong id="editorTitle">Post</strong><span id="formatPill" class="formatPill"></span></header>
+ <nav class="workflow" aria-label="Etapas de edição">
+  <button type="button" class="workflowStep active" data-go-step="0">1. Modelo</button>
+  <button type="button" class="workflowStep" data-go-step="1">2. Fotos</button>
+  <button type="button" class="workflowStep" data-go-step="2">3. Texto</button>
+  <button type="button" class="workflowStep" data-go-step="3">4. Marca</button>
+  <button type="button" class="workflowStep" data-go-step="4">5. Ajustes</button>
+  <span class="workflowMeta"><b id="stepCount">1</b>/5</span>
+ </nav>
  <main class="editor">
   <aside class="panel">
    <div class="panelScroll">
-    <div class="section">
-     <h3>Formato</h3>
+    <div class="section isActive" data-step="0">
+     <h3>Modelo e padrão</h3>
      <div class="field"><label>Modelo</label><select id="model"></select></div>
      <label class="toggle" id="captionToggle"><input id="showCaption" type="checkbox" checked> Mostrar legenda</label>
      <label class="toggle"><input id="showGuides" type="checkbox"> Mostrar guias</label>
     </div>
-    <div class="section">
+    <div class="section" data-step="1">
      <h3>Fotos</h3>
      <div class="fileDrop"><label>Enviar fotos</label><input id="photos" type="file" accept="image/*,.heic,.heif,.psd,.psb,.webp,.png,.jpg,.jpeg" multiple></div>
      <div class="row">
@@ -53,14 +66,14 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
      </div>
      <div class="field"><label>Espaço entre fotos</label><div class="range"><input id="gap" type="range" min="0" max="28" value="12"><output id="gapV">12</output></div></div>
     </div>
-    <div class="section">
-     <h3 id="captionHeading">Legenda</h3>
+    <div class="section" data-step="2">
+     <h3 id="captionHeading">Texto e legenda</h3>
      <div class="field" id="titleField"><label id="titleLabel">Título</label><textarea id="title">Soluções eficientes em drenagem na mina de Serra Norte</textarea></div>
      <div class="field postOnly" id="bodyField"><label>Texto</label><textarea id="body">Uso de extrusora na construção de canaletas. Mais produtividade, praticidade e segurança.</textarea></div>
      <div class="row postOnly" id="postSize"><div class="field"><label>Largura da caixa</label><div class="range"><input id="capW" type="range" min="650" max="1280" value="980"><output id="capWV">980</output></div></div><div class="field"><label>Altura extra</label><div class="range"><input id="capH" type="range" min="0" max="180" value="30"><output id="capHV">30</output></div></div></div>
      <div class="row storyOnly hidden" id="storySize"><div class="field"><label>Largura da barra</label><div class="range"><input id="storyW" type="range" min="560" max="980" value="800"><output id="storyWV">800</output></div></div><div class="field"><label>Altura da barra</label><div class="range"><input id="storyH" type="range" min="58" max="140" value="92"><output id="storyHV">92</output></div></div></div>
     </div>
-    <div class="section postOnly" id="brandSection">
+    <div class="section postOnly" id="brandSection" data-step="3">
      <h3>Estado e Cliente</h3>
      <div class="field"><label>Estado / bandeira</label><select id="state"></select><div class="assetList" id="stateGrid"></div></div>
      <div class="field"><label>Cliente / marca</label><select id="client"></select><div class="assetList" id="clientGrid"></div></div>
@@ -68,13 +81,13 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
      <div class="row"><label class="toggle"><input id="showState" type="checkbox" checked> Mostrar estado</label><label class="toggle"><input id="showClient" type="checkbox" checked> Mostrar cliente</label></div>
     </div>
 
-    <div class="section storyOnly hidden" id="storyBackgroundSection">
+    <div class="section storyOnly hidden" id="storyBackgroundSection" data-step="3">
      <h3>Fundos do Story</h3>
      <div class="field"><label>Escolher fundo</label><div class="assetList storyShort" id="storyBgGrid"></div></div>
      <div class="field"><label>Upload de fundo</label><div class="fileDrop"><input id="storyBgUpload" type="file" accept="image/*,.png,.jpg,.jpeg,.webp"></div></div>
      <div class="subHint">Escolha um fundo pronto da biblioteca ou carregue um fundo próprio.</div>
     </div>
-    <div class="section storyOnly hidden" id="storyElementsSection">
+    <div class="section storyOnly hidden" id="storyElementsSection" data-step="3">
      <h3>Elementos do Story</h3>
      <div class="field"><label>Biblioteca de elementos</label><div class="assetList storyShort" id="storyElementGrid"></div></div>
      <div class="miniActions"><button class="miniBtn" id="addStoryElement" type="button">Adicionar elemento</button><button class="miniBtn" id="removeStoryElement" type="button">Remover selecionado</button></div>
@@ -82,8 +95,8 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
      <div class="row" style="margin-top:10px"><div class="field"><label>Elemento ativo</label><select id="storyElementSelect"></select></div><div class="field"><label>Largura do elemento</label><div class="range"><input id="storyElementW" type="range" min="60" max="900" value="240"><output id="storyElementWV">240</output></div></div></div>
 
     </div>
-    <div class="section">
-     <h3>Movimento</h3>
+    <div class="section" data-step="4">
+     <h3>Ajuste fino</h3>
      <div class="moveGrid">
       <div class="moveBox"><h4 id="captionMoveLabel">Legenda</h4><div class="arrows" data-move="caption"><button class="arrow blank"></button><button class="arrow" data-dx="0" data-dy="-10">▲</button><button class="arrow blank"></button><button class="arrow" data-dx="-10" data-dy="0">◀</button><button class="arrow" data-dx="0" data-dy="10">▼</button><button class="arrow" data-dx="10" data-dy="0">▶</button></div><div class="quick">toque e arraste no canvas</div></div>
       <div class="moveBox postOnly"><h4>Logo cliente</h4><div class="arrows" data-move="client"><button class="arrow blank"></button><button class="arrow" data-dx="0" data-dy="-10">▲</button><button class="arrow blank"></button><button class="arrow" data-dx="-10" data-dy="0">◀</button><button class="arrow" data-dx="0" data-dy="10">▼</button><button class="arrow" data-dx="10" data-dy="0">▶</button></div><div class="quick">toque e arraste no canvas</div></div>
@@ -91,6 +104,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
     </div>
    </div>
    <div class="actions"><button class="primary" id="download">Baixar PNG</button><button class="ghost" id="center">Centralizar foto</button></div>
+   <div class="workflowActions"><button type="button" class="navBack" id="stepBack">Voltar</button><button type="button" class="navPreview" id="previewToggle">Prévia</button><button type="button" class="navNext" id="stepNext">Avançar</button></div>
   </aside>
   <section class="stageWrap"><div class="stage"><canvas id="canvas"></canvas><div id="storyStageActions" class="storyStageActions hidden"><button id="lockPhotosBtn" type="button" class="storyLockBtn">Salvar posição das fotos</button><span id="lockPhotosState" class="storyLockState"></span></div></div></section>
  </main>
@@ -230,10 +244,30 @@ function stopDrag(e){if(e&&st.pointers[e.pointerId]) delete st.pointers[e.pointe
 canvas.addEventListener('pointerup',stopDrag);
 canvas.addEventListener('pointercancel',stopDrag);
 
+// Fluxo guiado de edição: cada etapa mostra só o que é necessário naquele momento.
+let currentStep=0;
+const TOTAL_STEPS=5;
+function visibleStepSections(step){
+  document.querySelectorAll('.section[data-step]').forEach(sec=>sec.classList.toggle('isActive',+sec.dataset.step===step));
+  document.querySelectorAll('[data-go-step]').forEach(btn=>{let n=+btn.dataset.goStep;btn.classList.toggle('active',n===step);btn.classList.toggle('done',n<step)});
+  $('stepCount').textContent=String(step+1);
+  $('stepBack').disabled=step===0;
+  $('stepBack').style.opacity=step===0?'.45':'1';
+  const final=step===TOTAL_STEPS-1;
+  $('stepNext').textContent=final?'Baixar PNG':'Avançar';
+  $('stepNext').classList.toggle('finish',final);
+  const active=document.querySelector('.workflowStep.active'); if(active) active.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
+  const sc=document.querySelector('.panelScroll'); if(sc)sc.scrollTop=0;
+}
+function goStep(step){currentStep=Math.max(0,Math.min(TOTAL_STEPS-1,step));visibleStepSections(currentStep)}
+document.querySelectorAll('[data-go-step]').forEach(btn=>btn.addEventListener('click',()=>goStep(+btn.dataset.goStep)));
+$('stepBack').onclick=()=>goStep(currentStep-1);
+$('stepNext').onclick=()=>{if(currentStep===TOTAL_STEPS-1){$('download').click()}else goStep(currentStep+1)};
+$('previewToggle').onclick=()=>{const on=$('app').classList.toggle('previewing');$('previewToggle').textContent=on?'Editar':'Prévia';if(on)draw()};
 // Navegação e controles principais
 function resetEditor(){st.photos=[];st.active=0;st.photosLocked=false;st.caption={x:0,y:0};st.client={x:0,y:0};st.storyElements=[];st.activeStoryElement=-1;st.storyBgOverride=null;st.selectedStoryBg=0;refreshActive();refreshStoryElementControls();updatePhotoLockUI();}
-document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{resetEditor();setMode(b.dataset.open)});
-$('backHome').onclick=()=>{$('app').classList.add('hidden');$('home').classList.remove('hidden')};
+document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{resetEditor();$('app').classList.remove('previewing');$('previewToggle').textContent='Prévia';goStep(0);setMode(b.dataset.open)});
+$('backHome').onclick=()=>{$('app').classList.remove('previewing');$('app').classList.add('hidden');$('home').classList.remove('hidden')};
 $('photos').onchange=e=>handleFiles(e.target.files);
 $('activePhoto').onchange=e=>{st.active=+e.target.value;refreshActive();draw()};
 $('zoom').oninput=e=>{let q=st.photos[st.active];if(q){q.z=+e.target.value;$('zoomV').value=q.z.toFixed(2);draw()}};
@@ -250,6 +284,6 @@ $('storyElementSelect').onchange=e=>{st.activeStoryElement=+e.target.value;refre
 $('storyElementW').oninput=e=>{let val=+e.target.value;$('storyElementWV').value=val;let el=st.storyElements[st.activeStoryElement];if(el){el.w=val;draw()}};
 $('lockPhotosBtn').onclick=()=>{if(mode!=='story')return;st.photosLocked=!st.photosLocked;updatePhotoLockUI();draw();};
 $('center').onclick=()=>{if(mode==='story'&&st.photosLocked)return;let q=st.photos[st.active];if(q){q.z=1;q.dx=0;q.dy=0;refreshActive();draw()}};$('download').onclick=async()=>{await renderNow();canvas.toBlob(blob=>{if(!blob){toast('Não foi possível gerar a imagem.');return;}let a=document.createElement('a');let url=URL.createObjectURL(blob);a.download=(mode==='story'?'story':'post')+'_lucena.png';a.href=url;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);},'image/png')};
-(async()=>{await loadFrames();renderAssets();refreshStoryElementControls();updatePhotoLockUI();draw()})();
+(async()=>{await loadFrames();renderAssets();refreshStoryElementControls();updatePhotoLockUI();goStep(0);draw()})();
 </script>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('./service-worker.js').catch(()=>{})}</script></body></html>
+<script>if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')){navigator.serviceWorker.register('./service-worker.js',{scope:'./'}).catch(()=>{})}</script></body></html>

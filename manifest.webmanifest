@@ -1,7 +1,8 @@
 {
-  "name": "Lucena Editor App",
+  "name": "Lucena Editor — Fotos e Stories",
   "short_name": "Lucena Editor",
-  "start_url": "./index.html",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#083f78",
   "theme_color": "#083f78",

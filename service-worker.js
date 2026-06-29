@@ -1,4 +1,99 @@
-const CACHE='lucena-editor-v5';
-self.addEventListener('install',e=>e.waitUntil(self.skipWaiting()));
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));});
+/* Lucena Editor — cache local para uso no GitHub Pages. */
+const CACHE = 'lucena-editor-2026-06-29';
+const ASSETS = [
+  "./README.txt",
+  "./assets/app/icon-192.png",
+  "./assets/app/icon-512.png",
+  "./assets/background/fundo(5).png",
+  "./assets/brand_defaults/logo1.png",
+  "./assets/brand_defaults/logo2.png",
+  "./assets/clientes/AGETO.png",
+  "./assets/clientes/ALUMAR.png",
+  "./assets/clientes/ANGLO AMERICAN.png",
+  "./assets/clientes/BAMIN.png",
+  "./assets/clientes/CIMENTO BRAVO.png",
+  "./assets/clientes/CODEVASF.png",
+  "./assets/clientes/DNIT.png",
+  "./assets/clientes/EBX.png",
+  "./assets/clientes/ENEVA.png",
+  "./assets/clientes/GOINFRA.png",
+  "./assets/clientes/GOVERNO DA BAHIA.png",
+  "./assets/clientes/GOVERNO DO GOIÁS.png",
+  "./assets/clientes/GOVERNO DO MARANHÃO.png",
+  "./assets/clientes/GOVERNO DO MATO GROSSO.png",
+  "./assets/clientes/GOVERNO DO PARÁ.png",
+  "./assets/clientes/GOVERNO DO TOCANTINS.png",
+  "./assets/clientes/INFRAERO.png",
+  "./assets/clientes/MRS.png",
+  "./assets/clientes/PORTO DO ITAQUI.png",
+  "./assets/clientes/PORTO SÃO LUÍS.png",
+  "./assets/clientes/PREFEITURA DE ANÁPOLIS.png",
+  "./assets/clientes/PREFEITURA DE ARAGUAÍNA.png",
+  "./assets/clientes/PREFEITURA DE ARAPIRACA.png",
+  "./assets/clientes/PREFEITURA DE BARCARENA.png",
+  "./assets/clientes/PREFEITURA DE BELEM.png",
+  "./assets/clientes/PREFEITURA DE GOIâNIA.png",
+  "./assets/clientes/PREFEITURA DE PALMAS.png",
+  "./assets/clientes/PREFEITURA DE PARAGOMINAS.png",
+  "./assets/clientes/PREFEITURA DE PIRIPIRI.png",
+  "./assets/clientes/PREFEITURA DE SÃO JOSÉ DE RIBAMAR.png",
+  "./assets/clientes/PREFEITURA DE SÃO LUÍS.png",
+  "./assets/clientes/SUZANO.png",
+  "./assets/clientes/VALE.png",
+  "./assets/clientes/VLI.png",
+  "./assets/clientes/logo-nova-rota-white.png",
+  "./assets/clientes/ugpe.png",
+  "./assets/estados/AL.png",
+  "./assets/estados/AM.png",
+  "./assets/estados/BA.png",
+  "./assets/estados/GO.png",
+  "./assets/estados/MA.png",
+  "./assets/estados/MG.png",
+  "./assets/estados/MT.png",
+  "./assets/estados/PA.png",
+  "./assets/estados/PI.png",
+  "./assets/estados/TO.png",
+  "./assets/frames/frame foto dupla(1).png",
+  "./assets/frames/frame foto interra(1).png",
+  "./assets/story_backgrounds/FUNDO 1.png",
+  "./assets/story_backgrounds/FUNDO 2.png",
+  "./assets/story_backgrounds/FUNDO 3.png",
+  "./assets/story_backgrounds/FUNDO 4.png",
+  "./assets/story_backgrounds/FUNDO 5.png",
+  "./assets/story_backgrounds/FUNDO 6.png",
+  "./assets/story_elements/ARCO_VERMELHO.png",
+  "./assets/story_elements/DESEMPENHOS_RESULTADOS.png",
+  "./assets/story_elements/FAIXA_VERMELHA.png",
+  "./assets/story_elements/HASHTAG_OBRA_DA_LUCENA.png",
+  "./assets/story_elements/LUCENA_CABECALHO.png",
+  "./assets/story_elements/LUCENA_INFRA_BRANCA.png",
+  "./assets/story_elements/SAUDE_LUCENA.png",
+  "./assets/story_elements/SEGURANCA.png",
+  "./assets/story_elements/SELO_AZUL.png",
+  "./assets/story_elements/TOCOOU.png",
+  "./assets/story_elements/VACIN_ACAO.png",
+  "./index.html",
+  "./manifest.webmanifest",
+  "./assets/asset-manifest.json"
+];
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))).then(() => self.clients.claim()));
+});
+
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+  event.respondWith(
+    caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
+      const copy = response.clone();
+      if (response.ok && new URL(event.request.url).origin === self.location.origin) {
+        caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+      }
+      return response;
+    })).catch(() => caches.match('./index.html'))
+  );
+});
